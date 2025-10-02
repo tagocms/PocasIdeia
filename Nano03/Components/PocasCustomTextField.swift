@@ -32,12 +32,17 @@ class PocasCustomTextField: UITextField {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: - Setup
+    private func insetBounds(_ bounds: CGRect) -> CGRect {
+        return bounds.inset(by: edgeInsets)
+    }
     override func textRect(forBounds bounds: CGRect) -> CGRect {
-        return super.textRect(forBounds: bounds.insetBy(dx: edgeInsets.left + edgeInsets.right, dy: edgeInsets.top + edgeInsets.bottom))
+        return super.textRect(forBounds: insetBounds(bounds))
     }
     
     override func editingRect(forBounds bounds: CGRect) -> CGRect {
-        return super.editingRect(forBounds: bounds.insetBy(dx: edgeInsets.left + edgeInsets.right, dy: edgeInsets.top + edgeInsets.bottom))
+        return super.editingRect(forBounds: insetBounds(bounds))
     }
 }
 
