@@ -26,6 +26,7 @@ class PocasCustomTextField: UITextField {
         layer.borderWidth = 0.5
         layer.borderColor = UIColor.pocasSuperDarkCrimson.cgColor
         edgeInsets = .init(vertical: 10, horizontal: 10)
+        clearButtonMode = .whileEditing
     }
     
     required init?(coder: NSCoder) {
