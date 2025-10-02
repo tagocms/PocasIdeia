@@ -91,30 +91,30 @@ class CameraViewController: UIViewController {
     private func setupCamera() {
         let session = AVCaptureSession()
         let inputDevice = AVCaptureDevice.default(for: .video)
-        if let inputDevice {
-            do {
-                let input = try AVCaptureDeviceInput(device: inputDevice)
-                if session.canAddInput(input) {
-                    session.addInput(input)
-                }
-                
-                if session.canAddOutput(output) {
-                    session.addOutput(output)
-                }
-                
-                previewLayer.session = session
-                previewLayer.videoGravity = .resizeAspectFill
-                
-                DispatchQueue.global(qos: .background).async {
-                    // TODO: - Make sure it's worth it to put this in the background
-                    session.startRunning()
-                }
-                self.session = session
-                view.layer.addSublayer(previewLayer)
-                view.addSubview(shutterButton)
-            } catch {
-                print("Unable to initialize camera input: ", error)
+        guard let inputDevice else { return }
+        
+        do {
+            let input = try AVCaptureDeviceInput(device: inputDevice)
+            if session.canAddInput(input) {
+                session.addInput(input)
             }
+            
+            if session.canAddOutput(output) {
+                session.addOutput(output)
+            }
+            
+            previewLayer.session = session
+            previewLayer.videoGravity = .resizeAspectFill
+            
+            DispatchQueue.global(qos: .background).async {
+                // TODO: - Make sure it's worth it to put this in the background
+                session.startRunning()
+            }
+            self.session = session
+            view.layer.addSublayer(previewLayer)
+            view.addSubview(shutterButton)
+        } catch {
+            print("Unable to initialize camera input: ", error)
         }
     }
     
