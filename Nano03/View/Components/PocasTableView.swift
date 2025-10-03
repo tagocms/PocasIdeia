@@ -13,9 +13,6 @@ class PocasTableView: UITableView {
         super.init(frame: .zero, style: .plain)
         translatesAutoresizingMaskIntoConstraints = false
         register(PocasTableViewCell.self, forCellReuseIdentifier: PocasTableViewCell.identifier)
-        
-        setupUI()
-        setupConstraints()
     }
     
     required init?(coder: NSCoder) {

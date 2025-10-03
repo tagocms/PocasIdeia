@@ -10,19 +10,7 @@ import UIKit
 class MainListView: UIView {
     
     // MARK: - UI Elements
-    let newItemButton = PocasNewItemButton()
-    let pocasTagButton = PocasTagButton(type: .medium, tagName: "Title", isUserInteractionEnabled: false, onButtonPressed: {_ in})
-    let titleNameView = PocasCustomTitle(type: .name, title: "POCAS IDEIA")
-    let largeTitleInputField = PocasTitleTextField(placeholderText: "O que te irritou...")
-    let largeTitleView = PocasCustomTitle(type: .large, title: "Coisa Ruim")
-    let mediumTitleView = PocasCustomTitle(type: .medium, title: "Coisa Ruim")
-    let smallTitleView = PocasCustomTitle(type: .small, title: "Coisa Ruim")
-    let inputViewTest = PocasLabelInputView(type: .images, labelText: "Test", imageSystemName: "plus")
-    private(set) lazy var customButton = PocasCustomButton(
-        type: .primary,
-        text: "Salvar o item",
-        systemName: "square.and.pencil"
-    )
+    
 
     // MARK: - Initializers
     override init(frame: CGRect) {
@@ -39,51 +27,11 @@ class MainListView: UIView {
     
     // MARK: - Setup UI
     private func setupUI() {
-        addSubview(newItemButton)
-        addSubview(pocasTagButton)
-        addSubview(titleNameView)
-        addSubview(largeTitleInputField)
-        addSubview(largeTitleView)
-        addSubview(mediumTitleView)
-        addSubview(smallTitleView)
-        addSubview(inputViewTest)
-
-        addSubview(customButton)
+        //
     }
     
     private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            pocasTagButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            pocasTagButton.bottomAnchor.constraint(equalTo: largeTitleInputField.topAnchor, constant: -12),
-            
-            largeTitleInputField.centerXAnchor.constraint(equalTo: centerXAnchor),
-            largeTitleInputField.bottomAnchor.constraint(equalTo: newItemButton.topAnchor, constant: -12),
-            
-            newItemButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            newItemButton.bottomAnchor.constraint(equalTo: titleNameView.topAnchor, constant: -12),
-            
-            titleNameView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleNameView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            
-            largeTitleView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            largeTitleView.topAnchor.constraint(equalTo: titleNameView.bottomAnchor, constant: 12),
-            
-            mediumTitleView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            mediumTitleView.topAnchor.constraint(equalTo: largeTitleView.bottomAnchor, constant: 12),
-            
-            smallTitleView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            smallTitleView.topAnchor.constraint(equalTo: mediumTitleView.bottomAnchor, constant: 12),
-            
-            inputViewTest.centerXAnchor.constraint(equalTo: centerXAnchor),
-            inputViewTest.topAnchor.constraint(equalTo: smallTitleView.bottomAnchor, constant: 12),
-            inputViewTest.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9),
-            inputViewTest.bottomAnchor.constraint(equalTo: customButton.topAnchor, constant: -12),
-            
-            customButton.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9),
-            customButton.heightAnchor.constraint(equalToConstant: 42),
-            customButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            customButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-        ])
+        //
     }
     
 }
