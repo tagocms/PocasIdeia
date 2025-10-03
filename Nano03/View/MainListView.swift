@@ -10,16 +10,15 @@ import UIKit
 class MainListView: UIView {
     
     // MARK: - UI Elements
+    let newItemButton = PocasNewItemButton()
     let titleNameView = PocasCustomTitle(type: .name, title: "POCAS IDEIA")
     let largeTitleView = PocasCustomTitle(type: .large, title: "Coisa Ruim")
     let mediumTitleView = PocasCustomTitle(type: .medium, title: "Coisa Ruim")
     let smallTitleView = PocasCustomTitle(type: .small, title: "Coisa Ruim")
     let inputViewTest = PocasLabelInputView(type: .photo, labelText: "Test", imageSystemName: "plus")
-    
-    
     private(set) lazy var customButton = PocasCustomButton(
         type: .primary,
-        text: "HDAUIDHAUIWD",
+        text: "Salvar o item",
         systemName: "square.and.pencil"
     )
 
@@ -38,6 +37,7 @@ class MainListView: UIView {
     
     // MARK: - Setup UI
     private func setupUI() {
+        addSubview(newItemButton)
         addSubview(titleNameView)
         addSubview(largeTitleView)
         addSubview(mediumTitleView)
@@ -49,6 +49,9 @@ class MainListView: UIView {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            newItemButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+            newItemButton.bottomAnchor.constraint(equalTo: titleNameView.topAnchor, constant: -12),
+            
             titleNameView.centerXAnchor.constraint(equalTo: centerXAnchor),
             titleNameView.centerYAnchor.constraint(equalTo: centerYAnchor),
             
