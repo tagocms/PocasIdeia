@@ -8,16 +8,26 @@
 import UIKit
 
 class PocasTableViewCell: UITableViewCell {
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    static let identifier = "TableCell"
+    
+    // MARK: - Initializers
+    init() {
+        super.init(style: .default, reuseIdentifier: Self.identifier)
+        setupUI()
+        setupConstraints()
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Setup UI
+    func setupUI() {
+        //
+    }
+    
+    func setupConstraints() {
+        //
     }
 
 }

@@ -59,6 +59,19 @@ extension MainListViewController: UICollectionViewDelegateFlowLayout {
         } else {
             return CGSize(width: 60, height: 60)
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+        if collectionView != mainListView.inputViewTest.inputTags {
+            let contextMenuConfiguration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
+                let deleteImageAction = UIAction(title: "Deletar imagem", image: UIImage(systemName: "trash")) { action in
+                    // TODO: - Implement the deletion of the image
+                }
+                return UIMenu(title: "", children: [deleteImageAction])
+            }
+            return contextMenuConfiguration
+        }
         
+        return nil
     }
 }

@@ -54,8 +54,8 @@ class PocasLabelInputView: UIView {
         case .images:
             inputImagesButton = PocasCustomButton(type: .secondary, text: "Adicione uma imagem", systemName: "photo")
             inputImagesButton?.contentHorizontalAlignment = .leading
+            
             inputImages = PocasImageCollectionView()
-            // TODO: - Image CollectionView, setup and constraints
         case .slider:
             inputSlider = UISlider()
             inputSlider?.translatesAutoresizingMaskIntoConstraints = false

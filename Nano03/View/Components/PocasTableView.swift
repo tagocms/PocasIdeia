@@ -8,13 +8,26 @@
 import UIKit
 
 class PocasTableView: UITableView {
-
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    // MARK: - Initializers
+    init() {
+        super.init(frame: .zero, style: .plain)
+        translatesAutoresizingMaskIntoConstraints = false
+        register(PocasTableViewCell.self, forCellReuseIdentifier: PocasTableViewCell.identifier)
+        
+        setupUI()
+        setupConstraints()
     }
-    */
-
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Setup UI
+    func setupUI() {
+        //
+    }
+    
+    func setupConstraints() {
+        //
+    }
 }

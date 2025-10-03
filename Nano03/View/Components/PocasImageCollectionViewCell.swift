@@ -13,6 +13,10 @@ class PocasImageCollectionViewCell: UICollectionViewCell {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         
+        image.layer.cornerRadius = 12
+        image.contentMode = .scaleAspectFill
+        image.clipsToBounds = true
+        
         return image
     }()
     
@@ -21,6 +25,8 @@ class PocasImageCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         setupUI()
         setupConstraints()
+        
+        layer.cornerRadius = 12
     }
     
     required init?(coder: NSCoder) {
