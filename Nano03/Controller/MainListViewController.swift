@@ -43,9 +43,9 @@ extension MainListViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PocasImageCollectionViewCell.identifier, for: indexPath) as? PocasImageCollectionViewCell else {
                 fatalError("Unable to dequeue reusable cell for Tag.")
             }
+            print("Cell at \(indexPath)")
             let image = UIImage(resource: .flame3)
             cell.customImageView.image = image
-            print("Cell at \(indexPath)")
             return cell
         }
     }

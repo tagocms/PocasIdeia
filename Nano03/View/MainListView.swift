@@ -63,7 +63,7 @@ class MainListView: UIView {
             tagCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
             imageCollectionView.topAnchor.constraint(equalTo: tagCollectionView.bottomAnchor),
-            imageCollectionView.heightAnchor.constraint(equalToConstant: 50),
+            imageCollectionView.heightAnchor.constraint(equalToConstant: 100),
             imageCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             

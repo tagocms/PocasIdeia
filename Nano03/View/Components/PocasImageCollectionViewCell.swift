@@ -36,8 +36,8 @@ class PocasImageCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             customImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             customImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            customImageView.heightAnchor.constraint(equalTo: heightAnchor),
-            customImageView.widthAnchor.constraint(equalTo: widthAnchor),
+            customImageView.topAnchor.constraint(equalTo: topAnchor),
+            customImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 }

@@ -37,7 +37,6 @@ class PocasTagCollectionViewCell: UICollectionViewCell {
             tagButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             tagButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             tagButton.heightAnchor.constraint(equalTo: heightAnchor),
-            tagButton.widthAnchor.constraint(equalTo: widthAnchor),
         ])
     }
 }
