@@ -14,7 +14,6 @@ class PocasTagCollectionView: UICollectionView {
         layout.scrollDirection = .horizontal
         layout.minimumInteritemSpacing = 8
         layout.sectionInset = UIEdgeInsets(vertical: 4, horizontal: 10)
-        layout.minimumLineSpacing = .greatestFiniteMagnitude
         
         super.init(frame: .zero, collectionViewLayout: layout)
         translatesAutoresizingMaskIntoConstraints = false

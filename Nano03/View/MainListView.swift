@@ -10,8 +10,6 @@ import UIKit
 class MainListView: UIView {
     
     // MARK: - UI Elements
-    let tagCollectionView = PocasTagCollectionView()
-    let imageCollectionView = PocasImageCollectionView()
     let newItemButton = PocasNewItemButton()
     let pocasTagButton = PocasTagButton(type: .medium, tagName: "Title", isUserInteractionEnabled: false, onButtonPressed: {_ in})
     let titleNameView = PocasCustomTitle(type: .name, title: "POCAS IDEIA")
@@ -19,7 +17,7 @@ class MainListView: UIView {
     let largeTitleView = PocasCustomTitle(type: .large, title: "Coisa Ruim")
     let mediumTitleView = PocasCustomTitle(type: .medium, title: "Coisa Ruim")
     let smallTitleView = PocasCustomTitle(type: .small, title: "Coisa Ruim")
-    let inputViewTest = PocasLabelInputView(type: .photo, labelText: "Test", imageSystemName: "plus")
+    let inputViewTest = PocasLabelInputView(type: .images, labelText: "Test", imageSystemName: "plus")
     private(set) lazy var customButton = PocasCustomButton(
         type: .primary,
         text: "Salvar o item",
@@ -41,8 +39,6 @@ class MainListView: UIView {
     
     // MARK: - Setup UI
     private func setupUI() {
-        addSubview(tagCollectionView)
-        addSubview(imageCollectionView)
         addSubview(newItemButton)
         addSubview(pocasTagButton)
         addSubview(titleNameView)
@@ -57,16 +53,6 @@ class MainListView: UIView {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            tagCollectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            tagCollectionView.heightAnchor.constraint(equalToConstant: 50),
-            tagCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            tagCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            
-            imageCollectionView.topAnchor.constraint(equalTo: tagCollectionView.bottomAnchor),
-            imageCollectionView.heightAnchor.constraint(equalToConstant: 100),
-            imageCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            imageCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            
             pocasTagButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             pocasTagButton.bottomAnchor.constraint(equalTo: largeTitleInputField.topAnchor, constant: -12),
             
@@ -91,6 +77,7 @@ class MainListView: UIView {
             inputViewTest.centerXAnchor.constraint(equalTo: centerXAnchor),
             inputViewTest.topAnchor.constraint(equalTo: smallTitleView.bottomAnchor, constant: 12),
             inputViewTest.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9),
+            inputViewTest.bottomAnchor.constraint(equalTo: customButton.topAnchor, constant: -12),
             
             customButton.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9),
             customButton.heightAnchor.constraint(equalToConstant: 42),

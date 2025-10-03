@@ -16,11 +16,11 @@ class MainListViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        mainListView.tagCollectionView.dataSource = self
-        mainListView.tagCollectionView.delegate = self
-        mainListView.imageCollectionView.dataSource = self
-        mainListView.imageCollectionView.delegate = self
+    
+        mainListView.inputViewTest.inputTags?.dataSource = self
+        mainListView.inputViewTest.inputTags?.delegate = self
+        mainListView.inputViewTest.inputImages?.dataSource = self
+        mainListView.inputViewTest.inputImages?.delegate = self
     }
 
 }
@@ -32,7 +32,7 @@ extension MainListViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == mainListView.tagCollectionView {
+        if collectionView == mainListView.inputViewTest.inputTags {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PocasTagCollectionViewCell.identifier, for: indexPath) as? PocasTagCollectionViewCell else {
                 fatalError("Unable to dequeue reusable cell for Tag.")
             }
@@ -43,7 +43,6 @@ extension MainListViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PocasImageCollectionViewCell.identifier, for: indexPath) as? PocasImageCollectionViewCell else {
                 fatalError("Unable to dequeue reusable cell for Tag.")
             }
-            print("Cell at \(indexPath)")
             let image = UIImage(resource: .flame3)
             cell.customImageView.image = image
             return cell
@@ -53,7 +52,7 @@ extension MainListViewController: UICollectionViewDataSource {
 
 extension MainListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if collectionView == mainListView.tagCollectionView {
+        if collectionView == mainListView.inputViewTest.inputTags {
             let button = PocasTagButton(type: .medium, tagName: "Title \(indexPath.row)", onButtonPressed: { _ in })
             let buttonSize = button.intrinsicContentSize
             return CGSize(width: buttonSize.width, height: buttonSize.height)

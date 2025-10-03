@@ -8,15 +8,27 @@
 import UIKit
 
 class PocasLabelInputView: UIView {
+    // MARK: Constants
+    struct Constants {
+        static let horizontalPadding: CGFloat = 10
+        static let verticalPadding: CGFloat = 4
+        static let verticalSpacing: CGFloat = 10
+        static let verticalSpacingBetweenElements: CGFloat = 4
+        
+    }
+    
     // MARK: - UI Elements
     private let textLabel: PocasCustomTitle = PocasCustomTitle(type: .medium, title: "")
-    private var systemImageButton: UIButton? = nil
-    private var inputTextField: PocasCustomTextField? = nil
-    private var inputTextView: PocasCustomTextView? = nil
-    private var inputImagesButton: PocasCustomButton? = nil
-    private var inputImages: PocasImageCollectionView? = nil
-    private var inputSlider: UISlider? = nil
     private let type: LabelInputViewType
+    
+    private(set) var systemImageButton: UIButton? = nil
+    private(set) var inputTextField: PocasCustomTextField? = nil
+    private(set) var inputTextView: PocasCustomTextView? = nil
+    private(set) var inputImagesButton: PocasCustomButton? = nil
+    private(set) var inputImages: PocasImageCollectionView? = nil
+    private(set) var inputSlider: UISlider? = nil
+    private(set) var inputTags: PocasTagCollectionView? = nil
+    
     
     // MARK: - Initializers
     init(type: LabelInputViewType, labelText: String, placeholderText: String? = nil, imageSystemName: String? = nil) {
@@ -39,9 +51,10 @@ class PocasLabelInputView: UIView {
                 systemImageButton?.setPreferredSymbolConfiguration(.init(pointSize: 24, weight: .regular), forImageIn: .normal)
                 systemImageButton?.translatesAutoresizingMaskIntoConstraints = false
             }
-        case .photo:
+        case .images:
             inputImagesButton = PocasCustomButton(type: .secondary, text: "Adicione uma imagem", systemName: "photo")
             inputImagesButton?.contentHorizontalAlignment = .leading
+            inputImages = PocasImageCollectionView()
             // TODO: - Image CollectionView, setup and constraints
         case .slider:
             inputSlider = UISlider()
@@ -55,8 +68,7 @@ class PocasLabelInputView: UIView {
             inputSlider?.maximumValue = 3
             inputSlider?.tintColor = .pocasCrimson
         case .tags:
-            // TODO: - Tag CollectionView, setup and constraints
-            break
+            inputTags = PocasTagCollectionView()
         }
         
         
@@ -84,20 +96,27 @@ class PocasLabelInputView: UIView {
         if let inputImagesButton {
             addSubview(inputImagesButton)
         }
+        if let inputImages {
+            addSubview(inputImages)
+        }
         if let inputSlider {
             addSubview(inputSlider)
+        }
+        if let inputTags {
+            addSubview(inputTags)
         }
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            textLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            textLabel.topAnchor.constraint(equalTo: topAnchor, constant: 4),
+            textLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.horizontalPadding),
+            textLabel.topAnchor.constraint(equalTo: topAnchor, constant: Constants.verticalPadding),
+            textLabel.heightAnchor.constraint(equalToConstant: textLabel.intrinsicContentSize.height)
         ])
         
         if let systemImageButton {
             NSLayoutConstraint.activate([
-                systemImageButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+                systemImageButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.horizontalPadding),
                 systemImageButton.centerYAnchor.constraint(equalTo: textLabel.centerYAnchor),
             ])
         }
@@ -105,41 +124,57 @@ class PocasLabelInputView: UIView {
         if let inputTextView {
             NSLayoutConstraint.activate([
                 inputTextView.leadingAnchor.constraint(equalTo: textLabel.leadingAnchor),
-                inputTextView.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 10),
-                inputTextView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-                inputTextView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
+                inputTextView.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: Constants.verticalSpacing),
+                inputTextView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.horizontalPadding),
+                inputTextView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.verticalPadding),
                 ])
         }
         
         if let inputTextField {
             NSLayoutConstraint.activate([
                 inputTextField.leadingAnchor.constraint(equalTo: textLabel.leadingAnchor),
-                inputTextField.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 10),
+                inputTextField.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: Constants.verticalSpacing),
                 inputTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-                inputTextField.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
+                inputTextField.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.verticalPadding),
                 ])
         }
         
-        if let inputImagesButton {
+        if let inputImagesButton, let inputImages {
             NSLayoutConstraint.activate([
                 inputImagesButton.leadingAnchor.constraint(equalTo: leadingAnchor),
-                inputImagesButton.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 10),
-                inputImagesButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-                inputImagesButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
+                inputImagesButton.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: Constants.verticalSpacing),
+                inputImagesButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.horizontalPadding),
+                inputImagesButton.heightAnchor.constraint(equalToConstant: inputImagesButton.intrinsicContentSize.height),
+                ])
+            
+            NSLayoutConstraint.activate([
+                inputImages.leadingAnchor.constraint(equalTo: textLabel.leadingAnchor),
+                inputImages.topAnchor.constraint(equalTo: inputImagesButton.bottomAnchor, constant: Constants.verticalSpacingBetweenElements),
+                inputImages.trailingAnchor.constraint(equalTo: inputImagesButton.trailingAnchor),
+                inputImages.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.verticalPadding),
                 ])
         }
         
         if let inputSlider {
             NSLayoutConstraint.activate([
                 inputSlider.leadingAnchor.constraint(equalTo: textLabel.leadingAnchor),
-                inputSlider.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 10),
-                inputSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-                inputSlider.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
+                inputSlider.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: Constants.verticalSpacing),
+                inputSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.horizontalPadding),
+                inputSlider.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.verticalPadding),
+                ])
+        }
+        
+        if let inputTags {
+            NSLayoutConstraint.activate([
+                inputTags.leadingAnchor.constraint(equalTo: textLabel.leadingAnchor),
+                inputTags.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: Constants.verticalSpacing),
+                inputTags.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.horizontalPadding),
+                inputTags.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.verticalPadding),
                 ])
         }
     }
 }
 
 enum LabelInputViewType {
-    case textView, textField, photo, slider, tags
+    case textView, textField, images, slider, tags
 }
