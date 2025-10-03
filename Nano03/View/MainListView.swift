@@ -10,8 +10,11 @@ import UIKit
 class MainListView: UIView {
     
     // MARK: - UI Elements
+    let tagCollectionView = PocasTagCollectionView()
     let newItemButton = PocasNewItemButton()
+    let pocasTagButton = PocasTagButton(type: .medium, tagName: "Title", isUserInteractionEnabled: false, onButtonPressed: {_ in})
     let titleNameView = PocasCustomTitle(type: .name, title: "POCAS IDEIA")
+    let largeTitleInputField = PocasTitleTextField(placeholderText: "O que te irritou...")
     let largeTitleView = PocasCustomTitle(type: .large, title: "Coisa Ruim")
     let mediumTitleView = PocasCustomTitle(type: .medium, title: "Coisa Ruim")
     let smallTitleView = PocasCustomTitle(type: .small, title: "Coisa Ruim")
@@ -37,8 +40,11 @@ class MainListView: UIView {
     
     // MARK: - Setup UI
     private func setupUI() {
+        addSubview(tagCollectionView)
         addSubview(newItemButton)
+        addSubview(pocasTagButton)
         addSubview(titleNameView)
+        addSubview(largeTitleInputField)
         addSubview(largeTitleView)
         addSubview(mediumTitleView)
         addSubview(smallTitleView)
@@ -49,6 +55,17 @@ class MainListView: UIView {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            tagCollectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            tagCollectionView.heightAnchor.constraint(equalToConstant: 50),
+            tagCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            tagCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            
+            pocasTagButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+            pocasTagButton.bottomAnchor.constraint(equalTo: largeTitleInputField.topAnchor, constant: -12),
+            
+            largeTitleInputField.centerXAnchor.constraint(equalTo: centerXAnchor),
+            largeTitleInputField.bottomAnchor.constraint(equalTo: newItemButton.topAnchor, constant: -12),
+            
             newItemButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             newItemButton.bottomAnchor.constraint(equalTo: titleNameView.topAnchor, constant: -12),
             
