@@ -21,13 +21,4 @@ class PocasTableView: UITableView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - Setup UI
-    func setupUI() {
-        //
-    }
-    
-    func setupConstraints() {
-        //
-    }
 }

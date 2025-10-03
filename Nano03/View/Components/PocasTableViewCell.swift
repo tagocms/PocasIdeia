@@ -10,6 +10,16 @@ import UIKit
 class PocasTableViewCell: UITableViewCell {
     static let identifier = "TableCell"
     
+    // MARK: - UI Elements
+    let customImageView: UIImageView = {
+        let customImageView = UIImageView()
+        customImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return customImageView
+    }()
+    let customLabel = PocasCustomTitle(type: .small, title: "")
+    let tagsCollection = PocasTagCollectionView()
+    
     // MARK: - Initializers
     init() {
         super.init(style: .default, reuseIdentifier: Self.identifier)
@@ -23,11 +33,27 @@ class PocasTableViewCell: UITableViewCell {
     
     // MARK: - Setup UI
     func setupUI() {
-        //
+        addSubview(customImageView)
+        addSubview(customLabel)
+        addSubview(tagsCollection)
     }
     
     func setupConstraints() {
-        //
+        NSLayoutConstraint.activate([
+            customImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            customImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            customImageView.heightAnchor.constraint(equalToConstant: 60),
+            customImageView.widthAnchor.constraint(equalTo: customImageView.heightAnchor),
+            
+            customLabel.leadingAnchor.constraint(equalTo: customImageView.trailingAnchor, constant: 10),
+            customLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            customLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16.5),
+            
+            tagsCollection.leadingAnchor.constraint(equalTo: customLabel.leadingAnchor),
+            tagsCollection.trailingAnchor.constraint(equalTo: customLabel.trailingAnchor),
+            tagsCollection.topAnchor.constraint(equalTo: customLabel.bottomAnchor, constant: 4),
+            tagsCollection.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16.5),
+        ])
     }
 
 }
