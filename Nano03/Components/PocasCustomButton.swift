@@ -16,26 +16,26 @@ class PocasCustomButton: UIButton {
         
         switch type {
         case .primary:
-            configuration = UIButton.Configuration.filled()
+            configuration = .filled()
             tintColor = .pocasWhite
             configuration?.baseBackgroundColor = .pocasLightCrimson
             configuration?.background.cornerRadius = 12
         case .secondary:
-            configuration = UIButton.Configuration.plain()
+            configuration = .plain()
             tintColor = .pocasLightCrimson
         case .destructive:
-            configuration = UIButton.Configuration.plain()
+            configuration = .plain()
             tintColor = .systemRed
         }
         
         configuration?.image = UIImage(systemName: systemName)
         configuration?.imagePadding = 4
-        configuration?.preferredSymbolConfigurationForImage = .init(font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize))
+        configuration?.preferredSymbolConfigurationForImage = .init(font: UIFont.systemFont(ofSize: 17))
         
         // Altering the text's font using UIConfigurationTextAttributesTransformer
         let titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
-            outgoing.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize)
+            outgoing.font = UIFont.systemFont(ofSize: 17)
             return outgoing
         }
         

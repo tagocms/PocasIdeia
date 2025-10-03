@@ -1,0 +1,20 @@
+//
+//  PocasImageCollectionView.swift
+//  Nano03
+//
+//  Created by Tiago Camargo Maciel dos Santos on 02/10/25.
+//
+
+import UIKit
+
+class PocasImageCollectionView: UICollectionView {
+
+    /*
+    // Only override draw() if you perform custom drawing.
+    // An empty implementation adversely affects performance during animation.
+    override func draw(_ rect: CGRect) {
+        // Drawing code
+    }
+    */
+
+}

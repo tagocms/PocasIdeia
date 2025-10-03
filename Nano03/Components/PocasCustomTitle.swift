@@ -21,11 +21,11 @@ class PocasCustomTitle: UILabel {
         case .name:
             font = UIFont(name: "Anton-Regular", size: 34)
         case .large:
-            font = UIFont.boldSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .largeTitle).pointSize)
+            font = UIFont.boldSystemFont(ofSize: 34)
         case .medium:
-            font = UIFont.boldSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .title2).pointSize)
+            font = UIFont.boldSystemFont(ofSize: 22)
         case .small:
-            font = UIFont.boldSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize)
+            font = UIFont.boldSystemFont(ofSize: 17)
         }
     }
     

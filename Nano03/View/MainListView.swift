@@ -14,7 +14,8 @@ class MainListView: UIView {
     let largeTitleView = PocasCustomTitle(type: .large, title: "Coisa Ruim")
     let mediumTitleView = PocasCustomTitle(type: .medium, title: "Coisa Ruim")
     let smallTitleView = PocasCustomTitle(type: .small, title: "Coisa Ruim")
-    let inputViewTest = PocasCustomTextField(type: .textarea, placeholderText: "Test")
+    let inputViewTest = PocasLabelInputView(type: .photo, labelText: "Test", imageSystemName: "plus")
+    
     
     private(set) lazy var customButton = PocasCustomButton(
         type: .primary,
