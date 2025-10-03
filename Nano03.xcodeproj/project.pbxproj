@@ -150,8 +150,6 @@
 				INFOPLIST_FILE = Nano03/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PocasIdeia;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Precisamos de acesso à câmera para capturar fotos e salvar para cada item.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Precisamos utilizar o feed da câmera.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Precisamos de acesso às suas fotos para salvar fotos de cada item.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -188,8 +186,6 @@
 				INFOPLIST_FILE = Nano03/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PocasIdeia;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Precisamos de acesso à câmera para capturar fotos e salvar para cada item.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Precisamos utilizar o feed da câmera.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Precisamos de acesso às suas fotos para salvar fotos de cada item.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
