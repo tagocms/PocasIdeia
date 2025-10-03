@@ -8,13 +8,22 @@
 import UIKit
 
 class PocasImageCollectionView: UICollectionView {
-
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    // MARK: - Initializers
+    init() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumInteritemSpacing = 8
+        layout.minimumLineSpacing = .greatestFiniteMagnitude
+        
+        super.init(frame: .zero, collectionViewLayout: layout)
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        self.backgroundColor = .clear
+        
+        register(PocasImageCollectionViewCell.self, forCellWithReuseIdentifier: PocasImageCollectionViewCell.identifier)
     }
-    */
-
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

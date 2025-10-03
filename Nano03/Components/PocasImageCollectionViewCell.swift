@@ -8,5 +8,36 @@
 import UIKit
 
 class PocasImageCollectionViewCell: UICollectionViewCell {
+    static let identifier = "ImageCell"
+    var customImageView: UIImageView = {
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        
+        return image
+    }()
     
+    // MARK: - Initializers
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Setup UI
+    func setupUI() {
+        addSubview(customImageView)
+    }
+    
+    func setupConstraints() {
+        NSLayoutConstraint.activate([
+            customImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            customImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            customImageView.heightAnchor.constraint(equalTo: heightAnchor),
+            customImageView.widthAnchor.constraint(equalTo: widthAnchor),
+        ])
+    }
 }

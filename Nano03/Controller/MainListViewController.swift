@@ -19,6 +19,8 @@ class MainListViewController: UIViewController {
         
         mainListView.tagCollectionView.dataSource = self
         mainListView.tagCollectionView.delegate = self
+        mainListView.imageCollectionView.dataSource = self
+        mainListView.imageCollectionView.delegate = self
     }
 
 }
@@ -30,19 +32,34 @@ extension MainListViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PocasTagCollectionViewCell.identifier, for: indexPath) as? PocasTagCollectionViewCell else {
-            fatalError("Unable to dequeue reusable cell for Tag.")
+        if collectionView == mainListView.tagCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PocasTagCollectionViewCell.identifier, for: indexPath) as? PocasTagCollectionViewCell else {
+                fatalError("Unable to dequeue reusable cell for Tag.")
+            }
+            let button = PocasTagButton(type: .medium, tagName: "Title \(indexPath.row)", onButtonPressed: {_ in })
+            cell.tagButton = button
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PocasImageCollectionViewCell.identifier, for: indexPath) as? PocasImageCollectionViewCell else {
+                fatalError("Unable to dequeue reusable cell for Tag.")
+            }
+            let image = UIImage(resource: .flame3)
+            cell.customImageView.image = image
+            print("Cell at \(indexPath)")
+            return cell
         }
-        let button = PocasTagButton(type: .medium, tagName: "Title \(indexPath.row)", onButtonPressed: {_ in })
-        cell.tagButton = button
-        return cell
     }
 }
 
 extension MainListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let button = PocasTagButton(type: .medium, tagName: "Title \(indexPath.row)", onButtonPressed: { _ in })
-        let buttonSize = button.intrinsicContentSize
-        return CGSize(width: buttonSize.width, height: buttonSize.height)
+        if collectionView == mainListView.tagCollectionView {
+            let button = PocasTagButton(type: .medium, tagName: "Title \(indexPath.row)", onButtonPressed: { _ in })
+            let buttonSize = button.intrinsicContentSize
+            return CGSize(width: buttonSize.width, height: buttonSize.height)
+        } else {
+            return CGSize(width: 60, height: 60)
+        }
+        
     }
 }

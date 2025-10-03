@@ -11,6 +11,7 @@ class MainListView: UIView {
     
     // MARK: - UI Elements
     let tagCollectionView = PocasTagCollectionView()
+    let imageCollectionView = PocasImageCollectionView()
     let newItemButton = PocasNewItemButton()
     let pocasTagButton = PocasTagButton(type: .medium, tagName: "Title", isUserInteractionEnabled: false, onButtonPressed: {_ in})
     let titleNameView = PocasCustomTitle(type: .name, title: "POCAS IDEIA")
@@ -41,6 +42,7 @@ class MainListView: UIView {
     // MARK: - Setup UI
     private func setupUI() {
         addSubview(tagCollectionView)
+        addSubview(imageCollectionView)
         addSubview(newItemButton)
         addSubview(pocasTagButton)
         addSubview(titleNameView)
@@ -59,6 +61,11 @@ class MainListView: UIView {
             tagCollectionView.heightAnchor.constraint(equalToConstant: 50),
             tagCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tagCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            
+            imageCollectionView.topAnchor.constraint(equalTo: tagCollectionView.bottomAnchor),
+            imageCollectionView.heightAnchor.constraint(equalToConstant: 50),
+            imageCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            imageCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
             pocasTagButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             pocasTagButton.bottomAnchor.constraint(equalTo: largeTitleInputField.topAnchor, constant: -12),
