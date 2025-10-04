@@ -15,6 +15,7 @@ class PocasTableViewCell: UITableViewCell {
     let customImageView: UIImageView = {
         let customImageView = UIImageView()
         customImageView.translatesAutoresizingMaskIntoConstraints = false
+        customImageView.contentMode = .scaleAspectFill
         
         return customImageView
     }()
@@ -60,8 +61,6 @@ class PocasTableViewCell: UITableViewCell {
     func setupConstraints() {
         NSLayoutConstraint.activate([
             customImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            customImageView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-            customImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
             customImageView.widthAnchor.constraint(equalTo: customImageView.heightAnchor),
             
             stackView.centerYAnchor.constraint(equalTo: customImageView.centerYAnchor),
@@ -78,14 +77,28 @@ class PocasTableViewCell: UITableViewCell {
             tagsCollection.topAnchor.constraint(equalTo: stackView.centerYAnchor, constant: 2),
             tagsCollection.heightAnchor.constraint(equalToConstant: 21),
         ])
+        
+        // Constraints that can be broken on deletion animation
+        let heightImageConstraint = customImageView.heightAnchor.constraint(equalToConstant: 60)
+        heightImageConstraint.priority = UILayoutPriority(999)
+        heightImageConstraint.isActive = true
+        
+        let topImageConstraint = customImageView.topAnchor.constraint(equalTo: topAnchor, constant: 5)
+        topImageConstraint.priority = UILayoutPriority(999)
+        topImageConstraint.isActive = true
+            
+        let bottomImageConstraint = customImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5)
+        bottomImageConstraint.priority = UILayoutPriority(999)
+        bottomImageConstraint.isActive = true
     }
     
     // MARK: - Auxiliary functions
-    func configure(with tags: [String], label: String, image: UIImage) {
-            self.tags = tags
-            customLabel.text = label
-            customImageView.image = image
-            tagsCollection.reloadData()
+    func configure(with item: Item) {
+        let tagString: [String] = item.tags?.compactMap { $0.name } ?? []
+        self.tags = tagString
+        customLabel.text = item.title
+        customImageView.image = UIImage(named: "Flame\(item.irritationLevel)")
+        tagsCollection.reloadData()
         }
 
 }

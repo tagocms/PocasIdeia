@@ -8,6 +8,9 @@
 import UIKit
 
 class PocasNewItemButton: UIButton {
+    // MARK: - Properties
+    var onButtonPressed: () -> Void = { }
+    
     // MARK: - Initializers
     init() {
         super.init(frame: .zero)
@@ -25,9 +28,17 @@ class PocasNewItemButton: UIButton {
         configuration?.baseBackgroundColor = .pocasDarkCrimson
         configuration?.cornerStyle = .fixed
         configuration?.background.cornerRadius = 32
+        
+        addTarget(self, action: #selector(didPressButton), for: .touchUpInside)
     }
+
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Intent function
+    @objc private func didPressButton() {
+        onButtonPressed()
     }
 }

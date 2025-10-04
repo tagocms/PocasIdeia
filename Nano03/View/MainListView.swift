@@ -11,6 +11,7 @@ class MainListView: UIView {
     
     // MARK: - UI Elements
     let listView = PocasTableView()
+    let newItemButton = PocasNewItemButton()
 
     // MARK: - Initializers
     override init(frame: CGRect) {
@@ -28,6 +29,7 @@ class MainListView: UIView {
     // MARK: - Setup UI
     private func setupUI() {
         addSubview(listView)
+        addSubview(newItemButton)
     }
     
     private func setupConstraints() {
@@ -36,6 +38,11 @@ class MainListView: UIView {
             listView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             listView.leadingAnchor.constraint(equalTo: leadingAnchor),
             listView.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+        
+        NSLayoutConstraint.activate([
+            newItemButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            newItemButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
         ])
     }
     
