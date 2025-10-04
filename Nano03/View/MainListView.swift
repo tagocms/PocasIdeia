@@ -11,12 +11,20 @@ class MainListView: UIView {
     
     // MARK: - UI Elements
     let listView = PocasTableView()
+    let tagsCollectionView = PocasTagCollectionView()
     let newItemButton = PocasNewItemButton()
     var contentUnavailableView: UIContentUnavailableView = {
         let view = UIContentUnavailableView(configuration: .empty())
         view.translatesAutoresizingMaskIntoConstraints = false
-        setupContentUnavailableView(for: view)
         return view
+    }()
+    var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        
+        return stackView
     }()
 
     // MARK: - Initializers
@@ -24,6 +32,8 @@ class MainListView: UIView {
         super.init(frame: frame)
         backgroundColor = .pocasWhite
         
+        setupStackView()
+        setupContentUnavailableView(for: contentUnavailableView)
         setupUI()
         setupConstraints()
     }
@@ -33,7 +43,52 @@ class MainListView: UIView {
     }
     
     // MARK: - Setup UI
-    static private func setupContentUnavailableView(for view: UIContentUnavailableView) {
+    private func setupUI() {
+        addSubview(stackView)
+        addSubview(newItemButton)
+        addSubview(contentUnavailableView)
+    }
+    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+        ])
+        
+        NSLayoutConstraint.activate([
+            contentUnavailableView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            contentUnavailableView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
+            contentUnavailableView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            contentUnavailableView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+        ])
+        
+        NSLayoutConstraint.activate([
+            newItemButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            newItemButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
+        ])
+    }
+    
+    // MARK: - Auxiliary setup functions
+    private func setupStackView() {
+        stackView.addSubview(tagsCollectionView)
+        stackView.addSubview(listView)
+        
+        NSLayoutConstraint.activate([
+            tagsCollectionView.topAnchor.constraint(equalTo: stackView.topAnchor),
+            tagsCollectionView.heightAnchor.constraint(equalToConstant: 36),
+            tagsCollectionView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            tagsCollectionView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            
+            listView.topAnchor.constraint(equalTo: tagsCollectionView.bottomAnchor, constant: 10),
+            listView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
+            listView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            listView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+        ])
+    }
+    
+    private func setupContentUnavailableView(for view: UIContentUnavailableView) {
         let title = PocasCustomTitle(type: .medium, title: "Você ainda não se irritou com nada!")
         title.textAlignment = .center
         
@@ -66,33 +121,6 @@ class MainListView: UIView {
             imageView.bottomAnchor.constraint(equalTo: title.topAnchor, constant: -4),
             imageView.widthAnchor.constraint(equalToConstant: 120),
             imageView.heightAnchor.constraint(equalToConstant: 120),
-        ])
-    }
-    
-    private func setupUI() {
-        addSubview(listView)
-        addSubview(newItemButton)
-        addSubview(contentUnavailableView)
-    }
-    
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            listView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            listView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            listView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            listView.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-        
-        NSLayoutConstraint.activate([
-            contentUnavailableView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            contentUnavailableView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-            contentUnavailableView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            contentUnavailableView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-        ])
-        
-        NSLayoutConstraint.activate([
-            newItemButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            newItemButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
         ])
     }
     

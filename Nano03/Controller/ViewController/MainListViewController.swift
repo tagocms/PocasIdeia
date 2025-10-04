@@ -18,7 +18,21 @@ class MainListViewController: UIViewController {
             setupUIElements()
         }
     }
+    var tags: [Tag] = []
     var predicate: Predicate<Item>? = nil
+    var predicateTagList: [Tag] = [] {
+        didSet {
+            if predicateTagList.isEmpty {
+                predicate = nil
+            } else {
+                if predicate == nil {
+                    predicate = #Predicate { [weak self] item in
+                        item.tags?.contains { self?.predicateTagList.contains($0) ?? false } ?? false
+                    }
+                }
+            }
+        }
+    }
     var sortOrder = [
         SortDescriptor(\Item.title, order: .forward),
         SortDescriptor(\Item.irritationLevel, order: .forward),
@@ -38,11 +52,13 @@ class MainListViewController: UIViewController {
     
     // MARK: - Lifecycle
     override func loadView() {
-        super.loadView( )
+        super.loadView()
         view = mainListView
         
         mainListView.listView.delegate = self
         mainListView.listView.dataSource = self
+        mainListView.tagsCollectionView.delegate = self
+        mainListView.tagsCollectionView.dataSource = self
         
         mainListView.newItemButton.onButtonPressed = createNewItem
     }
@@ -52,36 +68,10 @@ class MainListViewController: UIViewController {
         
         setupAlert()
         container = try? ModelContainer(for: Item.self)
+        
         loadItemsAndReloadTable()
+        loadTagsAndReloadCollection()
         setupUIElements()
-    }
-    
-    // MARK: - Setup Functions
-    func setupUIElements() {
-        UIView.transition(with: mainListView.contentUnavailableView, duration: 0.5, options: .transitionCrossDissolve) { [weak self] in
-            if self?.items.isEmpty == true {
-                self?.mainListView.listView.layer.opacity = 0
-                self?.mainListView.contentUnavailableView.layer.opacity = 1
-            } else {
-                self?.mainListView.contentUnavailableView.layer.opacity = 0
-                self?.mainListView.listView.layer.opacity = 1
-            }
-        }
-    }
-    
-    func setupAlert() {
-        let confirmDeletion = UIAlertAction(title: "Exluir", style: .destructive) { [weak self] _ in
-            if let indexPathToDelete = self?.indexPathToDelete {
-                self?.confirmDeletion(at: indexPathToDelete)
-            }
-            self?.indexPathToDelete = nil
-        }
-        alertController.addAction(confirmDeletion)
-
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-            self.dismiss(animated: true)
-        }
-        alertController.addAction(cancelAction)
     }
     
     // MARK: - Data functions
@@ -92,9 +82,20 @@ class MainListViewController: UIViewController {
         items = (try? container?.mainContext.fetch(descriptor)) ?? []
     }
     
+    func loadTagsFromContext() {
+        var descriptor = FetchDescriptor<Tag>()
+        descriptor.sortBy = [SortDescriptor(\Tag.name, order: .forward)]
+        tags = (try? container?.mainContext.fetch(descriptor)) ?? []
+    }
+    
     func loadItemsAndReloadTable() {
         loadItemsFromContext()
         mainListView.listView.reloadData()
+    }
+    
+    func loadTagsAndReloadCollection() {
+        loadTagsFromContext()
+        mainListView.tagsCollectionView.reloadData()
     }
     
     func confirmDeletion(at indexPath: IndexPath) {
@@ -125,6 +126,34 @@ class MainListViewController: UIViewController {
         }
         
         mainListView.listView.insertRows(at: indexPaths, with: .right)
+    }
+    
+    // MARK: - Setup Functions
+    func setupUIElements() {
+        UIView.transition(with: mainListView.contentUnavailableView, duration: 0.5, options: .transitionCrossDissolve) { [weak self] in
+            if self?.items.isEmpty == true {
+                self?.mainListView.stackView.layer.opacity = 0
+                self?.mainListView.contentUnavailableView.layer.opacity = 1
+            } else {
+                self?.mainListView.contentUnavailableView.layer.opacity = 0
+                self?.mainListView.stackView.layer.opacity = 1
+            }
+        }
+    }
+    
+    func setupAlert() {
+        let confirmDeletion = UIAlertAction(title: "Exluir", style: .destructive) { [weak self] _ in
+            if let indexPathToDelete = self?.indexPathToDelete {
+                self?.confirmDeletion(at: indexPathToDelete)
+            }
+            self?.indexPathToDelete = nil
+        }
+        alertController.addAction(confirmDeletion)
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            self.dismiss(animated: true)
+        }
+        alertController.addAction(cancelAction)
     }
 
 }
@@ -171,5 +200,36 @@ extension MainListViewController: UITableViewDataSource, UITableViewDelegate {
             return UIMenu(title: "", children: [deleteAction])
         }
         return configuration
+    }
+}
+
+extension MainListViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        tags.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PocasTagCollectionViewCell.identifier, for: indexPath) as? PocasTagCollectionViewCell else {
+            fatalError("Unable to dequeue reusable cell for Tag.")
+        }
+        let buttonName = tags[indexPath.row].name
+        let button = PocasTagButton(type: .medium, tagName: buttonName, isTagSelected: false, isUserInteractionEnabled: true) { [weak self] button in
+            if let tag = self?.tags[indexPath.row] {
+                if button.isTagSelected {
+                    self?.predicateTagList.removeAll { $0.name == tag.name }
+                } else {
+                    self?.predicateTagList.append(tag)
+                }
+            }
+        }
+        cell.tagButton = button
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let buttonName = tags[indexPath.row].name
+        let button = PocasTagButton(type: .medium, tagName: buttonName, isTagSelected: false, isUserInteractionEnabled: true, onButtonPressed: {_ in })
+        
+        return button.intrinsicContentSize
     }
 }
