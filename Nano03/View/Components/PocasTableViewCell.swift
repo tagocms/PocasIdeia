@@ -42,8 +42,8 @@ class PocasTableViewCell: UITableViewCell {
         tagsCollection.dataSource = self
         
         backgroundColor = .pocasWhite
-        layer.borderColor = UIColor.pocasSuperDarkCrimson.withAlphaComponent(0.1).cgColor
-        layer.borderWidth = 0.5
+        // TODO: Alter the cell's color
+        tintColor = UIColor.pocasSuperDarkCrimson.withAlphaComponent(0.1)
     }
     
     required init?(coder: NSCoder) {
