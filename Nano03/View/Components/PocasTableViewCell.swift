@@ -96,6 +96,7 @@ class PocasTableViewCell: UITableViewCell {
     func configure(with item: Item) {
         let tagString: [String] = item.tags?.compactMap { $0.name } ?? []
         self.tags = tagString
+        self.tags.sort()
         customLabel.text = item.title
         customImageView.image = UIImage(named: "Flame\(item.irritationLevel)")
         tagsCollection.reloadData()
@@ -105,14 +106,14 @@ class PocasTableViewCell: UITableViewCell {
 
 extension PocasTableViewCell: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return min(tags.count, 4)
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PocasTagCollectionViewCell.identifier, for: indexPath) as? PocasTagCollectionViewCell else {
             fatalError("Unable to dequeue reusable cell for Tag.")
         }
-        let buttonName = indexPath.row < 3 ? "Title \(indexPath.row)" : "+ \(tags.count - 4)"
+        let buttonName = tags.count > 4 && indexPath.item == 3 ? "+ \(tags.count - indexPath.item)" : tags[indexPath.item]
         let button = PocasTagButton(type: .small, tagName: buttonName, isTagSelected: true, isUserInteractionEnabled: false, onButtonPressed: {_ in })
         cell.tagButton = button
         return cell

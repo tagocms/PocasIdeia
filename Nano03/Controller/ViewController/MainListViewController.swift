@@ -22,15 +22,8 @@ class MainListViewController: UIViewController {
     var predicate: Predicate<Item>? = nil
     var predicateTagList: [Tag] = [] {
         didSet {
-            if predicateTagList.isEmpty {
-                predicate = nil
-            } else {
-                if predicate == nil {
-                    predicate = #Predicate { [weak self] item in
-                        item.tags?.contains { self?.predicateTagList.contains($0) ?? false } ?? false
-                    }
-                }
-            }
+            updatePredicate()
+            loadItemsAndReloadTable()
         }
     }
     var sortOrder = [
@@ -106,14 +99,24 @@ class MainListViewController: UIViewController {
     }
     
     func createNewItem() {
-        let item1 = Item(id: UUID(), title: "Test1", irritationLevel: 2, summary: "lalalalla", images: [], tags: [Tag(id: UUID(), name: "Test1"), Tag(id: UUID(), name: "Test2"), Tag(id: UUID(), name: "Test3"), Tag(id: UUID(), name: "Test4"), Tag(id: UUID(), name: "Test5")], createdDate: Date.now)
-        let item2 = Item(id: UUID(), title: "Test2", irritationLevel: 1, summary: "lalalalla", images: [], tags: [Tag(id: UUID(), name: "Test1"), Tag(id: UUID(), name: "Test2"), Tag(id: UUID(), name: "Test3"), Tag(id: UUID(), name: "Test4"), Tag(id: UUID(), name: "Test5")], createdDate: Date.now)
-        let item3 = Item(id: UUID(), title: "Test3", irritationLevel: 3, summary: "lalalalla", images: [], tags: [Tag(id: UUID(), name: "Test1"), Tag(id: UUID(), name: "Test2"), Tag(id: UUID(), name: "Test3"), Tag(id: UUID(), name: "Test4"), Tag(id: UUID(), name: "Test5")], createdDate: Date.now)
+        let tag1 = Tag(id: UUID(), name: "Test1")
+        let tag2 = Tag(id: UUID(), name: "Test2")
+        let tag3 = Tag(id: UUID(), name: "Test3")
+        let tag4 = Tag(id: UUID(), name: "Test4")
+        let tag5 = Tag(id: UUID(), name: "Test5")
+        
+        let item1 = Item(id: UUID(), title: "Test1", irritationLevel: 2, summary: "lalalalla", images: [], tags: [tag1, tag2], createdDate: Date.now)
+        let item2 = Item(id: UUID(), title: "Test2", irritationLevel: 1, summary: "lalalalla", images: [], tags: [tag1, tag2, tag3, tag4, tag5], createdDate: Date.now)
+        let item3 = Item(id: UUID(), title: "Test3", irritationLevel: 3, summary: "lalalalla", images: [], tags: [tag5], createdDate: Date.now)
+
+        
+        for tag in tags {
+            container?.mainContext.delete(tag)
+        }
         
         container?.mainContext.insert(item1)
         container?.mainContext.insert(item2)
         container?.mainContext.insert(item3)
-        
         let insertedItems = [item1, item2, item3]
         
         loadItemsFromContext()
@@ -126,6 +129,27 @@ class MainListViewController: UIViewController {
         }
         
         mainListView.listView.insertRows(at: indexPaths, with: .right)
+        
+        if let cells = mainListView.listView.visibleCells as? [PocasTableViewCell] {
+            for cell in cells {
+                cell.tagsCollection.reloadData()
+            }
+        }
+        
+        loadTagsAndReloadCollection()
+    }
+    
+    private func updatePredicate() {
+        if predicateTagList.isEmpty {
+            predicate = nil
+        } else {
+            let selectedTagNames = predicateTagList.map { $0.name }
+            predicate = #Predicate<Item> { item in
+                item.tags?.contains { tag in
+                    selectedTagNames.contains(tag.name)
+                } == true
+            }
+        }
     }
     
     // MARK: - Setup Functions
