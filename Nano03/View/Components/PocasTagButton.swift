@@ -60,11 +60,11 @@ class PocasTagButton: UIButton {
     
     // MARK: - Update UI
     private func updateButtonAppearance() {
-        UIView.animate(withDuration: 5) { [self] in
-            if isTagSelected {
-                configuration?.baseBackgroundColor = .pocasCrimson
+        UIView.animate(withDuration: 5) { [weak self] in
+            if self?.isTagSelected == true {
+                self?.configuration?.baseBackgroundColor = .pocasCrimson
             } else {
-                configuration?.baseBackgroundColor = .pocasLightCrimson
+                self?.configuration?.baseBackgroundColor = .pocasLightCrimson
             }
         }
     }
