@@ -23,9 +23,10 @@ class MainListViewController: UIViewController {
     var predicateTagList: [Tag] = [] {
         didSet {
             updatePredicate()
-            loadItemsAndReloadTable()
+            animateFilterChanges()
         }
     }
+    
     var sortOrder = [
         SortDescriptor(\Item.title, order: .forward),
         SortDescriptor(\Item.irritationLevel, order: .forward),
@@ -148,6 +149,49 @@ class MainListViewController: UIViewController {
                 item.tags?.contains { tag in
                     selectedTagNames.contains(tag.name)
                 } == true
+            }
+        }
+    }
+    
+    private func animateFilterChanges() {
+        let oldItems = items
+        loadItemsFromContext()
+        
+        let oldCount = oldItems.count
+        let newCount = items.count
+        
+        mainListView.listView.performBatchUpdates {
+            if newCount < oldCount {
+                var indexPathsToDelete: [IndexPath] = []
+                for i in 0..<oldCount {
+                    let oldItem = oldItems[i]
+                    if !items.contains(where: { $0.id == oldItem.id }) {
+                        indexPathsToDelete.append(IndexPath(row: i, section: 0))
+                    }
+                }
+                if !indexPathsToDelete.isEmpty {
+                    mainListView.listView.deleteRows(at: indexPathsToDelete, with: .fade)
+                }
+            } else if newCount > oldCount {
+                var indexPathsToInsert: [IndexPath] = []
+                for i in 0..<newCount {
+                    let newItem = items[i]
+                    if !oldItems.contains(where: { $0.id == newItem.id }) {
+                        indexPathsToInsert.append(IndexPath(row: i, section: 0))
+                    }
+                }
+                if !indexPathsToInsert.isEmpty {
+                    mainListView.listView.insertRows(at: indexPathsToInsert, with: .fade)
+                }
+            }
+            // If counts are equal but items changed, we need a more complex diff
+            else if oldCount == newCount {
+                // Check if the items are actually different
+                let itemsChanged = !zip(oldItems, items).allSatisfy { $0.id == $1.id }
+                if itemsChanged {
+                    // Fallback to reload data for complex changes
+                    mainListView.listView.reloadData()
+                }
             }
         }
     }
