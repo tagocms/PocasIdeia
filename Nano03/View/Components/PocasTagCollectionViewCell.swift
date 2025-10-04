@@ -36,7 +36,7 @@ class PocasTagCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             tagButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             tagButton.trailingAnchor.constraint(equalTo: trailingAnchor),
-            tagButton.heightAnchor.constraint(equalTo: heightAnchor),
+            tagButton.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
     }
 }

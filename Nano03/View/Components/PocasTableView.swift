@@ -12,6 +12,11 @@ class PocasTableView: UITableView {
     init() {
         super.init(frame: .zero, style: .plain)
         translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .pocasWhite
+        
+        rowHeight = UITableView.automaticDimension
+        estimatedRowHeight = 150
+        
         register(PocasTableViewCell.self, forCellReuseIdentifier: PocasTableViewCell.identifier)
     }
     

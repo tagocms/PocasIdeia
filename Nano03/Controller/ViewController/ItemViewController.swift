@@ -59,7 +59,7 @@ extension ItemViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
         if collectionView != itemView.inputViewTest.inputTags {
             let contextMenuConfiguration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
-                let deleteImageAction = UIAction(title: "Deletar imagem", image: UIImage(systemName: "trash")) { action in
+                let deleteImageAction = UIAction(title: "Excluir imagem", image: UIImage(systemName: "trash"), attributes: [.destructive]) { action in
                     // TODO: - Implement the deletion of the image
                 }
                 return UIMenu(title: "", children: [deleteImageAction])

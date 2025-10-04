@@ -9,11 +9,11 @@ import UIKit
 
 class PocasTagCollectionView: UICollectionView {
     // MARK: - Initializers
-    init() {
+    init(edgeInsets: UIEdgeInsets = .zero) {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumInteritemSpacing = 8
-        layout.sectionInset = UIEdgeInsets(vertical: 4, horizontal: 10)
+        layout.sectionInset = edgeInsets
         
         super.init(frame: .zero, collectionViewLayout: layout)
         translatesAutoresizingMaskIntoConstraints = false

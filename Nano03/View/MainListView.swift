@@ -10,7 +10,7 @@ import UIKit
 class MainListView: UIView {
     
     // MARK: - UI Elements
-    
+    let listView = PocasTableView()
 
     // MARK: - Initializers
     override init(frame: CGRect) {
@@ -27,11 +27,16 @@ class MainListView: UIView {
     
     // MARK: - Setup UI
     private func setupUI() {
-        //
+        addSubview(listView)
     }
     
     private func setupConstraints() {
-        //
+        NSLayoutConstraint.activate([
+            listView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            listView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            listView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            listView.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
     }
     
 }
