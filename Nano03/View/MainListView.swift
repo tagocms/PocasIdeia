@@ -13,6 +13,7 @@ class MainListView: UIView {
     let listView = PocasTableView()
     let tagsCollectionView = PocasTagCollectionView()
     let newItemButton = PocasNewItemButton()
+    let titleLabel = PocasCustomTitle(type: .name, title: "POCAS IDEIA")
     var contentUnavailableView: UIContentUnavailableView = {
         let view = UIContentUnavailableView(configuration: .empty())
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -25,6 +26,38 @@ class MainListView: UIView {
         stackView.spacing = 0
         
         return stackView
+    }()
+    var searchBar: UISearchBar = {
+       let searchBar = UISearchBar()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.placeholder = "Buscar itens"
+        searchBar.returnKeyType = .done
+        searchBar.autocorrectionType = .no
+        searchBar.autocapitalizationType = .none
+        searchBar.barTintColor = .pocasWhite
+        searchBar.backgroundImage = UIImage()
+        
+        return searchBar
+    }()
+    var orderByButton: UIButton = {
+       let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.configuration = .plain()
+        button.setImage(UIImage(systemName: "arrow.up.arrow.down"), for: .normal)
+        button.tintColor = .pocasDarkCrimson
+        button.configuration?.preferredSymbolConfigurationForImage = .init(font: UIFont.systemFont(ofSize: 24))
+        
+        return button
+    }()
+    var filterButton: UIButton = {
+       let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.configuration = .plain()
+        button.setImage(UIImage(systemName: "line.3.horizontal.decrease"), for: .normal)
+        button.tintColor = .pocasDarkCrimson
+        button.configuration?.preferredSymbolConfigurationForImage = .init(font: UIFont.systemFont(ofSize: 24))
+        
+        return button
     }()
 
     // MARK: - Initializers
@@ -72,19 +105,45 @@ class MainListView: UIView {
     
     // MARK: - Auxiliary setup functions
     private func setupStackView() {
+        titleLabel.textColor = .pocasDarkCrimson
+        
         stackView.addSubview(tagsCollectionView)
         stackView.addSubview(listView)
+        stackView.addSubview(searchBar)
+        stackView.addSubview(titleLabel)
+        
+        stackView.addSubview(orderByButton)
+        stackView.addSubview(filterButton)
         
         NSLayoutConstraint.activate([
-            tagsCollectionView.topAnchor.constraint(equalTo: stackView.topAnchor),
+            titleLabel.topAnchor.constraint(equalTo: stackView.topAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 10),
+            titleLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            
+            searchBar.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            
+            searchBar.heightAnchor.constraint(equalToConstant: 36),
+            searchBar.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: orderByButton.leadingAnchor, constant: -4),
+            
+            filterButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -10),
+            filterButton.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
+            filterButton.widthAnchor.constraint(equalToConstant: filterButton.imageView?.intrinsicContentSize.width ?? 0),
+            
+            orderByButton.trailingAnchor.constraint(equalTo: filterButton.leadingAnchor, constant: -4),
+            orderByButton.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
+            orderByButton.widthAnchor.constraint(equalToConstant: orderByButton.imageView?.intrinsicContentSize.width ?? 0),
+
+            
+            tagsCollectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 10),
             tagsCollectionView.heightAnchor.constraint(equalToConstant: 36),
-            tagsCollectionView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            tagsCollectionView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 10),
             tagsCollectionView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             
             listView.topAnchor.constraint(equalTo: tagsCollectionView.bottomAnchor, constant: 10),
             listView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
-            listView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            listView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            listView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 10),
+            listView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -10),
         ])
     }
     
