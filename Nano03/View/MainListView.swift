@@ -15,7 +15,25 @@ class MainListView: UIView {
     var contentUnavailableView: UIContentUnavailableView = {
         let view = UIContentUnavailableView(configuration: .empty())
         view.translatesAutoresizingMaskIntoConstraints = false
+        setupContentUnavailableView(for: view)
+        return view
+    }()
+
+    // MARK: - Initializers
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .pocasWhite
         
+        setupUI()
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Setup UI
+    static private func setupContentUnavailableView(for view: UIContentUnavailableView) {
         let title = PocasCustomTitle(type: .medium, title: "Você ainda não se irritou com nada!")
         title.textAlignment = .center
         
@@ -49,24 +67,8 @@ class MainListView: UIView {
             imageView.widthAnchor.constraint(equalToConstant: 120),
             imageView.heightAnchor.constraint(equalToConstant: 120),
         ])
-        
-        return view
-    }()
-
-    // MARK: - Initializers
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        backgroundColor = .pocasWhite
-        
-        setupUI()
-        setupConstraints()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Setup UI
     private func setupUI() {
         addSubview(listView)
         addSubview(newItemButton)
