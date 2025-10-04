@@ -13,7 +13,11 @@ class MainListViewController: UIViewController {
     let mainListView = MainListView()
     let alertController = UIAlertController(title: "Excluir item", message: "Se você excluir este item, não poderá recuperá-lo.", preferredStyle: .alert)
     var container: ModelContainer?
-    var items: [Item] = []
+    var items: [Item] = [] {
+        didSet {
+            setupUIElements()
+        }
+    }
     var predicate: Predicate<Item>? = nil
     var sortOrder = [
         SortDescriptor(\Item.title, order: .forward),
@@ -46,6 +50,26 @@ class MainListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupAlert()
+        container = try? ModelContainer(for: Item.self)
+        loadItemsAndReloadTable()
+        setupUIElements()
+    }
+    
+    // MARK: - Setup Functions
+    func setupUIElements() {
+        UIView.transition(with: mainListView.contentUnavailableView, duration: 0.5, options: .transitionCrossDissolve) { [weak self] in
+            if self?.items.isEmpty == true {
+                self?.mainListView.listView.layer.opacity = 0
+                self?.mainListView.contentUnavailableView.layer.opacity = 1
+            } else {
+                self?.mainListView.contentUnavailableView.layer.opacity = 0
+                self?.mainListView.listView.layer.opacity = 1
+            }
+        }
+    }
+    
+    func setupAlert() {
         let confirmDeletion = UIAlertAction(title: "Exluir", style: .destructive) { [weak self] _ in
             if let indexPathToDelete = self?.indexPathToDelete {
                 self?.confirmDeletion(at: indexPathToDelete)
@@ -58,9 +82,6 @@ class MainListViewController: UIViewController {
             self.dismiss(animated: true)
         }
         alertController.addAction(cancelAction)
-        
-        container = try? ModelContainer(for: Item.self)
-        loadItemsAndReloadTable()
     }
     
     // MARK: - Data functions
