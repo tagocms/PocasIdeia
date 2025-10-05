@@ -14,7 +14,7 @@ class Tag: Identifiable {
     var name: String = ""
     @Relationship(deleteRule: .nullify) var items: [Item]? = []
     
-    init(id: UUID, name: String, items: [Item]? = nil) {
+    init(id: UUID = UUID(), name: String, items: [Item]? = nil) {
         self.id = id
         self.name = name
         self.items = items

@@ -79,10 +79,14 @@ class ItemViewController: UIViewController {
         totalTags = (try? container?.mainContext.fetch(descriptor)) ?? [ ]
     }
     
-    func loadTotalTagsAndReloadCollection() {
+    func loadTotalTagsAndReloadCollection(completion: (() -> Void)? = nil) {
         loadTotalTags()
-        print(totalTags.count)
         itemView.tagSelection.inputTags?.reloadData()
+        
+        // Execute completion after the next run loop cycle
+        DispatchQueue.main.async {
+            completion?()
+        }
     }
     
     // MARK: - Callback functions
@@ -157,7 +161,7 @@ extension ItemViewController: UICollectionViewDataSource {
         if collectionView == itemView.imageSelection.inputImages {
             return itemSelectedImages.count
         } else if collectionView == itemView.tagSelection.inputTags {
-            return totalTags.count
+            return totalTags.count + 1
         }
         
         return 0
@@ -168,6 +172,21 @@ extension ItemViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PocasTagCollectionViewCell.identifier, for: indexPath) as? PocasTagCollectionViewCell else {
                 fatalError("Unable to dequeue reusable cell for Tag.")
             }
+            guard indexPath.item < totalTags.count else {
+                let add = PocasTagButton(type: .add, tagName: "", isTagSelected: false, isUserInteractionEnabled: true) { [weak self] _ in
+                    let tagCreationViewController = TagCreationViewController(container: self?.container, itemViewController: self)
+                    let sheet = tagCreationViewController.sheetPresentationController
+                    sheet?.detents = [
+                        .custom(resolver: { context in
+                            return context.maximumDetentValue * 0.2
+                    })
+                    ]
+                    self?.present(tagCreationViewController, animated: true)
+                }
+                cell.tagButton = add
+                return cell
+            }
+                    
             let tag = totalTags[indexPath.item]
             let button = PocasTagButton(type: .medium, tagName: tag.name, isTagSelected: false, isUserInteractionEnabled: true) { [weak self] button in
                 if self?.itemSelectedTags.contains(tag) == true {
@@ -192,6 +211,11 @@ extension ItemViewController: UICollectionViewDataSource {
 extension ItemViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == itemView.tagSelection.inputTags {
+            guard indexPath.item < totalTags.count else {
+                let add = PocasTagButton(type: .add, tagName: "", isTagSelected: false, isUserInteractionEnabled: true) { _ in }
+                let buttonSize = add.intrinsicContentSize
+                return CGSize(width: buttonSize.width, height: buttonSize.height)
+            }
             let tag = totalTags[indexPath.item]
             let button = PocasTagButton(type: .medium, tagName: tag.name, onButtonPressed: { _ in })
             let buttonSize = button.intrinsicContentSize

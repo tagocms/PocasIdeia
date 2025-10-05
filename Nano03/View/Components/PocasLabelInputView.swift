@@ -17,6 +17,9 @@ class PocasLabelInputView: UIView {
         
     }
     
+    // MARK: - Callbacks
+    var onSystemImageButtonPressed: (() -> Void) = { }
+    
     // MARK: - UI Elements
     private let textLabel: PocasCustomTitle = PocasCustomTitle(type: .medium, title: "")
     private let type: LabelInputViewType
@@ -50,6 +53,8 @@ class PocasLabelInputView: UIView {
                 systemImageButton?.imageView?.tintColor = .pocasDarkCrimson
                 systemImageButton?.setPreferredSymbolConfiguration(.init(pointSize: 24, weight: .regular), forImageIn: .normal)
                 systemImageButton?.translatesAutoresizingMaskIntoConstraints = false
+                
+                systemImageButton?.addTarget(self, action: #selector(didPressSystemImageButton), for: .touchUpInside)
             }
         case .images:
             inputImagesButton = PocasCustomButton(type: .secondary, text: "Adicione uma imagem", systemName: "photo")
@@ -78,6 +83,11 @@ class PocasLabelInputView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Selector
+    @objc func didPressSystemImageButton() {
+        onSystemImageButtonPressed()
     }
     
     // MARK: - Setup
