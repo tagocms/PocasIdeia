@@ -104,6 +104,8 @@ class ItemViewController: UIViewController {
         itemView.deleteItemButton.onButtonPressed = deleteItemFromContext
         
         loadTotalTagsAndReloadCollection()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
     }
     
     // MARK: - Initializers
@@ -141,6 +143,10 @@ class ItemViewController: UIViewController {
     }
     
     // MARK: - Callback functions
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
     func updateSliderValue() {
         itemIrritationLevel = Int(itemView.irritationSelection.inputSlider?.value ?? 1)
     }
@@ -310,7 +316,7 @@ extension ItemViewController: UICollectionViewDelegateFlowLayout {
             let buttonSize = button.intrinsicContentSize
             return CGSize(width: buttonSize.width, height: buttonSize.height)
         } else {
-            return CGSize(width: 100, height: 100)
+            return CGSize(width: 60, height: 60)
         }
     }
     

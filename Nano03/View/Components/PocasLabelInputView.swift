@@ -169,7 +169,7 @@ class PocasLabelInputView: UIView {
                 inputImages.topAnchor.constraint(equalTo: inputImagesButton.bottomAnchor, constant: Constants.verticalSpacingBetweenElements),
                 inputImages.trailingAnchor.constraint(equalTo: inputImagesButton.trailingAnchor),
                 inputImages.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.verticalPadding),
-                inputImages.heightAnchor.constraint(equalToConstant: 100),
+                inputImages.heightAnchor.constraint(equalToConstant: 60),
                 ])
         }
         

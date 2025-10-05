@@ -21,7 +21,7 @@ class PocasCustomTextView: UITextView {
         text = placeholderText
         
         textColor = .pocasSuperDarkCrimson
-        backgroundColor = .white
+        backgroundColor = .systemBackground
         layer.cornerRadius = 12
         layer.borderWidth = 0.5
         layer.borderColor = UIColor.pocasSuperDarkCrimson.cgColor
