@@ -16,6 +16,8 @@ class PocasTableView: UITableView {
         
         rowHeight = UITableView.automaticDimension
         estimatedRowHeight = 150
+        separatorColor = UIColor.pocasSuperDarkCrimson.withAlphaComponent(0.5)
+        separatorStyle = .singleLine
         
         register(PocasTableViewCell.self, forCellReuseIdentifier: PocasTableViewCell.identifier)
     }

@@ -8,6 +8,9 @@
 import UIKit
 
 class PocasCustomButton: UIButton {
+    
+    // MARK: - Callback
+    var onButtonPressed: () -> Void = { }
 
     // MARK: - Initializers
     init(type: CustomButtonType, text: String, systemName: String) {
@@ -41,10 +44,17 @@ class PocasCustomButton: UIButton {
         
         configuration?.titleTextAttributesTransformer = titleTextAttributesTransformer
         configuration?.title = text
+        
+        addTarget(self, action: #selector(didPressButton), for: .touchUpInside)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Selector
+    @objc func didPressButton() {
+        onButtonPressed()
     }
 }
 

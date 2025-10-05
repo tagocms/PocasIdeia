@@ -18,7 +18,7 @@ class Item: Identifiable {
     var tags: [Tag]? = []
     var createdDate: Date = Date.now
     
-    init(id: UUID, title: String, irritationLevel: Int, summary: String, images: [Data], tags: [Tag]? = nil, createdDate: Date) {
+    init(id: UUID = UUID(), title: String, irritationLevel: Int, summary: String, images: [Data], tags: [Tag]? = nil, createdDate: Date = Date.now) {
         self.id = id
         self.title = title
         self.irritationLevel = irritationLevel

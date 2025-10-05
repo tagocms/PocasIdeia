@@ -11,7 +11,7 @@ class PocasImageCollectionView: UICollectionView {
     // MARK: - Initializers
     init() {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
+        layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = 8
         
         super.init(frame: .zero, collectionViewLayout: layout)

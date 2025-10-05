@@ -127,6 +127,7 @@ class PocasLabelInputView: UIView {
                 inputTextView.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: Constants.verticalSpacing),
                 inputTextView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.horizontalPadding),
                 inputTextView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.verticalPadding),
+                inputTextView.heightAnchor.constraint(equalToConstant: 100),
                 ])
         }
         
@@ -152,6 +153,7 @@ class PocasLabelInputView: UIView {
                 inputImages.topAnchor.constraint(equalTo: inputImagesButton.bottomAnchor, constant: Constants.verticalSpacingBetweenElements),
                 inputImages.trailingAnchor.constraint(equalTo: inputImagesButton.trailingAnchor),
                 inputImages.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.verticalPadding),
+                inputImages.heightAnchor.constraint(equalToConstant: 140),
                 ])
         }
         
@@ -169,7 +171,7 @@ class PocasLabelInputView: UIView {
                 inputTags.leadingAnchor.constraint(equalTo: textLabel.leadingAnchor),
                 inputTags.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: Constants.verticalSpacing),
                 inputTags.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.horizontalPadding),
-                inputTags.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.verticalPadding),
+                inputTags.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.verticalPadding)
                 ])
         }
     }

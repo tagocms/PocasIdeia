@@ -9,24 +9,30 @@ import UIKit
 
 class ItemView: UIView {
     // MARK: - UI Elements
-    let newItemButton = PocasNewItemButton()
-    let pocasTagButton = PocasTagButton(type: .medium, tagName: "Title", isUserInteractionEnabled: false, onButtonPressed: {_ in})
-    let titleNameView = PocasCustomTitle(type: .name, title: "POCAS IDEIA")
     let largeTitleInputField = PocasTitleTextField(placeholderText: "O que te irritou...")
-    let largeTitleView = PocasCustomTitle(type: .large, title: "Coisa Ruim")
-    let mediumTitleView = PocasCustomTitle(type: .medium, title: "Coisa Ruim")
-    let smallTitleView = PocasCustomTitle(type: .small, title: "Coisa Ruim")
-    let inputViewTest = PocasLabelInputView(type: .images, labelText: "Test", imageSystemName: "plus")
-    private(set) lazy var customButton = PocasCustomButton(
-        type: .primary,
-        text: "Salvar o item",
-        systemName: "square.and.pencil"
-    )
+    let irritationSelection = PocasLabelInputView(type: .slider, labelText: "O quanto te irrita")
+    let summaryInput = PocasLabelInputView(type: .textView, labelText: "O porquê te irrita")
+    let imageSelection = PocasLabelInputView(type: .images, labelText: "Imagens do que te irrita")
+    let tagSelection = PocasLabelInputView(type: .tags, labelText: "Etiquetas")
+    let saveItemButton = PocasCustomButton(type: .primary, text: "Salvar o item", systemName: "square.and.pencil")
+    let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 10
+        stackView.distribution = .fill
+        return stackView
+    }()
+    
+    // MARK: - Callbacks
+    var onSliderChanged: () -> Void = { }
 
     // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .pocasWhite
+        
+        irritationSelection.inputSlider?.addTarget(self, action: #selector(didChangeSlider), for: .valueChanged)
         
         setupUI()
         setupConstraints()
@@ -38,50 +44,39 @@ class ItemView: UIView {
     
     // MARK: - Setup UI
     private func setupUI() {
-        addSubview(newItemButton)
-        addSubview(pocasTagButton)
-        addSubview(titleNameView)
-        addSubview(largeTitleInputField)
-        addSubview(largeTitleView)
-        addSubview(mediumTitleView)
-        addSubview(smallTitleView)
-        addSubview(inputViewTest)
-
-        addSubview(customButton)
+        addSubview(stackView)
+        stackView.addArrangedSubview(largeTitleInputField)
+        stackView.addArrangedSubview(irritationSelection)
+        stackView.addArrangedSubview(summaryInput)
+        stackView.addArrangedSubview(imageSelection)
+        stackView.addArrangedSubview(tagSelection)
+        
+        tagSelection.setContentHuggingPriority(.required, for: .vertical)
+        tagSelection.setContentCompressionResistancePriority(.required, for: .vertical)
+        
+        let tagsLayout = tagSelection.inputTags?.collectionViewLayout as? UICollectionViewFlowLayout
+        tagsLayout?.scrollDirection = .vertical
+        
+        addSubview(saveItemButton)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            pocasTagButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            pocasTagButton.bottomAnchor.constraint(equalTo: largeTitleInputField.topAnchor, constant: -12),
+            stackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 12),
+            stackView.bottomAnchor.constraint(equalTo: saveItemButton.topAnchor, constant: -12),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             
-            largeTitleInputField.centerXAnchor.constraint(equalTo: centerXAnchor),
-            largeTitleInputField.bottomAnchor.constraint(equalTo: newItemButton.topAnchor, constant: -12),
-            
-            newItemButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            newItemButton.bottomAnchor.constraint(equalTo: titleNameView.topAnchor, constant: -12),
-            
-            titleNameView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleNameView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            
-            largeTitleView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            largeTitleView.topAnchor.constraint(equalTo: titleNameView.bottomAnchor, constant: 12),
-            
-            mediumTitleView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            mediumTitleView.topAnchor.constraint(equalTo: largeTitleView.bottomAnchor, constant: 12),
-            
-            smallTitleView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            smallTitleView.topAnchor.constraint(equalTo: mediumTitleView.bottomAnchor, constant: 12),
-            
-            inputViewTest.centerXAnchor.constraint(equalTo: centerXAnchor),
-            inputViewTest.topAnchor.constraint(equalTo: smallTitleView.bottomAnchor, constant: 12),
-            inputViewTest.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9),
-            inputViewTest.bottomAnchor.constraint(equalTo: customButton.topAnchor, constant: -12),
-            
-            customButton.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9),
-            customButton.heightAnchor.constraint(equalToConstant: 42),
-            customButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            customButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            saveItemButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            saveItemButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            saveItemButton.heightAnchor.constraint(equalToConstant: 42),
+            saveItemButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+            saveItemButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -12),
         ])
+    }
+    
+    // MARK: - Selectors
+    @objc func didChangeSlider() {
+        onSliderChanged()
     }
 }

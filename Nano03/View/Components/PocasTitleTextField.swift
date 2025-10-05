@@ -21,7 +21,7 @@ class PocasTitleTextField: UITextField {
         textColor = .pocasSuperDarkCrimson
         attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: [.foregroundColor: UIColor.pocasLightCrimson.withAlphaComponent(0.5)])
 
-        edgeInsets = .init(vertical: 10, horizontal: 10)
+        edgeInsets = .init(vertical: 4, horizontal: 10)
         returnKeyType = .done
         font = .boldSystemFont(ofSize: 34)
     }

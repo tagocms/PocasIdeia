@@ -100,44 +100,10 @@ class MainListViewController: UIViewController {
     }
     
     func createNewItem() {
-        let tag1 = Tag(id: UUID(), name: "Test1")
-        let tag2 = Tag(id: UUID(), name: "Test2")
-        let tag3 = Tag(id: UUID(), name: "Test3")
-        let tag4 = Tag(id: UUID(), name: "Test4")
-        let tag5 = Tag(id: UUID(), name: "Test5")
-        
-        let item1 = Item(id: UUID(), title: "Test1", irritationLevel: 2, summary: "lalalalla", images: [], tags: [tag1, tag2], createdDate: Date.now)
-        let item2 = Item(id: UUID(), title: "Test2", irritationLevel: 1, summary: "lalalalla", images: [], tags: [tag1, tag2, tag3, tag4, tag5], createdDate: Date.now)
-        let item3 = Item(id: UUID(), title: "Test3", irritationLevel: 3, summary: "lalalalla", images: [], tags: [tag5], createdDate: Date.now)
-
-        
-        for tag in tags {
-            container?.mainContext.delete(tag)
-        }
-        
-        container?.mainContext.insert(item1)
-        container?.mainContext.insert(item2)
-        container?.mainContext.insert(item3)
-        let insertedItems = [item1, item2, item3]
-        
-        loadItemsFromContext()
-        
-        var indexPaths: [IndexPath] = [ ]
-        for item in insertedItems {
-            if let index = items.firstIndex(where: { $0.id == item.id }) {
-                indexPaths.append(IndexPath(row: index, section: 0))
-            }
-        }
-        
-        mainListView.listView.insertRows(at: indexPaths, with: .right)
-        
-        if let cells = mainListView.listView.visibleCells as? [PocasTableViewCell] {
-            for cell in cells {
-                cell.tagsCollection.reloadData()
-            }
-        }
-        
-        loadTagsAndReloadCollection()
+        let itemViewController = ItemViewController(container: container, listViewController: self)
+        let sheet = itemViewController.sheetPresentationController
+        sheet?.detents = [.large()]
+        present(itemViewController, animated: true)
     }
     
     private func updatePredicate() {
@@ -198,13 +164,16 @@ class MainListViewController: UIViewController {
     
     // MARK: - Setup Functions
     func setupUIElements() {
+        mainListView.stackView.isHidden = true
+        mainListView.contentUnavailableView.isHidden = true
+        
         UIView.transition(with: mainListView.contentUnavailableView, duration: 0.5, options: .transitionCrossDissolve) { [weak self] in
             if self?.items.isEmpty == true {
-                self?.mainListView.stackView.layer.opacity = 0
-                self?.mainListView.contentUnavailableView.layer.opacity = 1
+                self?.mainListView.stackView.isHidden = true
+                self?.mainListView.contentUnavailableView.isHidden = false
             } else {
-                self?.mainListView.contentUnavailableView.layer.opacity = 0
-                self?.mainListView.stackView.layer.opacity = 1
+                self?.mainListView.contentUnavailableView.isHidden = true
+                self?.mainListView.stackView.isHidden = false
             }
         }
     }
