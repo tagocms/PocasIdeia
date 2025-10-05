@@ -170,7 +170,9 @@ class MainListViewController: UIViewController {
         mainListView.contentUnavailableView.isHidden = true
         
         UIView.transition(with: mainListView.contentUnavailableView, duration: 0.5, options: .transitionCrossDissolve) { [weak self] in
-            if self?.items.isEmpty == true {
+            let itemsTotal: [Item] = (try? self?.container?.mainContext.fetch(FetchDescriptor<Item>())) ?? []
+            
+            if itemsTotal.isEmpty {
                 self?.mainListView.stackView.isHidden = true
                 self?.mainListView.contentUnavailableView.isHidden = false
             } else {
