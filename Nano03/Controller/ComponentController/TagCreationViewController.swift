@@ -13,7 +13,7 @@ class TagCreationViewController: UIViewController {
     let container: ModelContainer?
     let itemViewController: ItemViewController?
     let alertViewController: UIAlertController = {
-        let alertController = UIAlertController(title: "Impossível salvar etiqueta", message: "", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Etiqueta inválida", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .cancel) { _ in
             alertController.dismiss(animated: true)
         }
@@ -26,6 +26,14 @@ class TagCreationViewController: UIViewController {
     
     // MARK: UI Elements
     let inputLabel = PocasLabelInputView(type: .textField, labelText: "Nome da etiqueta", placeholderText: "Nova etiqueta", imageSystemName: "plus")
+    let createTagFeedbackLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 14)
+        label.textColor = .pocasSuperDarkCrimson
+        
+        return label
+    }()
 
     
     // MARK: - Lifecycle
@@ -65,6 +73,8 @@ class TagCreationViewController: UIViewController {
     }
     
     func saveTag() {
+        createTagFeedbackLabel.text = ""
+        
         guard !tagTitle.isEmpty else {
             alertViewController.message = "Nome da etiqueta não pode ser vazio."
             present(alertViewController, animated: true)
@@ -96,11 +106,16 @@ class TagCreationViewController: UIViewController {
                 }
             }
         }
+        
+        createTagFeedbackLabel.text = "Etiqueta \"\(newTag.name)\" criada com sucesso!"
+        
+        try? container?.mainContext.save()
     }
     
     // MARK: - Setup UI
     func setupUI() {
         view.addSubview(inputLabel)
+        view.addSubview(createTagFeedbackLabel)
     }
     
     func setupConstraints() {
@@ -108,6 +123,10 @@ class TagCreationViewController: UIViewController {
             inputLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
             inputLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
             inputLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
+            
+            createTagFeedbackLabel.topAnchor.constraint(equalTo: inputLabel.bottomAnchor, constant: 4),
+            createTagFeedbackLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 22),
+            createTagFeedbackLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -22),
         ])
     }
 }

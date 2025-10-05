@@ -116,12 +116,12 @@ class ItemViewController: UIViewController {
             }
             present(alertController, animated: true)
         } else {
-            if !itemTitle.isEmpty {
+            if !itemTitle.isEmpty && itemTitle.count <= 30 {
                 let item = Item(title: itemTitle, irritationLevel: itemIrritationLevel, summary: itemSummary, images: itemSelectedImages, tags: itemSelectedTags)
                 container?.mainContext.insert(item)
             } else {
-                alertController.title = "Item sem título"
-                alertController.message = "Não é possível salvar um item sem um título."
+                alertController.title = "Título inválido"
+                alertController.message = "Não é possível salvar um item sem um título ou com um título de mais de 30 caracteres."
                 present(alertController, animated: true)
                 return
             }
@@ -129,6 +129,7 @@ class ItemViewController: UIViewController {
         
         listViewController.loadItemsAndReloadTable()
         listViewController.loadTagsAndReloadCollection()
+        try? container?.mainContext.save()
         dismiss(animated: true)
     }
     
