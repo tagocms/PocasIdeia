@@ -5,16 +5,19 @@
 //  Created by Tiago Camargo Maciel dos Santos on 03/10/25.
 //
 
-import UIKit
+import PhotosUI
 import SwiftData
+import UIKit
+
 
 class ItemViewController: UIViewController {
-    let itemView = ItemView()
+    // MARK: - Properties
+    let itemView: ItemView
     let item: Item?
     let listViewController: MainListViewController
     let container: ModelContainer?
     
-    let alertController: UIAlertController = {
+    let saveAlertController: UIAlertController = {
         let alertController = UIAlertController(title: "", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Cancelar", style: .cancel) { _ in
             alertController.dismiss(animated: true)
@@ -23,13 +26,51 @@ class ItemViewController: UIViewController {
         
         return alertController
     }()
+    let deleteAlertController: UIAlertController = {
+        let alertController = UIAlertController(title: "Excluir item", message: "Se você excluir este item, não poderá recuperá-lo.", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Cancelar", style: .cancel) { _ in
+            alertController.dismiss(animated: true)
+        }
+        alertController.addAction(action)
+        
+        return alertController
+    }()
+    let imagePickerController: PHPickerViewController = {
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .images
+        configuration.selectionLimit = 3
+        
+        
+        let imagePickerController = PHPickerViewController(configuration: configuration)
+        
+        return imagePickerController
+    }()
     
     var totalTags: [Tag] = [ ]
     
-    var itemTitle: String = ""
-    var itemIrritationLevel: Int = 1
-    var itemSummary: String = ""
-    var itemSelectedImages: [Data] = []
+    var itemTitle: String = "" {
+        didSet {
+            itemView.largeTitleInputField.text = itemTitle
+            title = itemTitle
+        }
+    }
+    var itemIrritationLevel: Int = 1 {
+        didSet {
+            itemView.irritationSelection.inputSlider?.value = Float(itemIrritationLevel)
+        }
+    }
+    var itemSummary: String = "" {
+        didSet {
+            itemView.summaryInput.inputTextView?.text = itemSummary
+        }
+    }
+    var itemSelectedImages: [Data] = [] {
+        didSet {
+            if itemSelectedImages.count > 3 {
+                itemSelectedImages = Array(itemSelectedImages[0..<3])
+            }
+        }
+    }
     var itemSelectedTags: [Tag] = []
 
     // MARK: - Lifecycle
@@ -39,9 +80,11 @@ class ItemViewController: UIViewController {
         title = item?.title
         navigationItem.largeTitleDisplayMode = .never
         
-        itemView.largeTitleInputField.text = item?.title
-        itemView.irritationSelection.inputSlider?.value = Float(item?.irritationLevel ?? 1)
-        itemView.summaryInput.inputTextView?.text = item?.summary
+        itemTitle = item?.title ?? ""
+        itemIrritationLevel = item?.irritationLevel ?? 1
+        itemSummary = item?.summary ?? ""
+        itemSelectedImages = item?.images ?? []
+        itemSelectedTags = item?.tags ?? []
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,9 +96,12 @@ class ItemViewController: UIViewController {
         
         itemView.imageSelection.inputImages?.dataSource = self
         itemView.tagSelection.inputTags?.dataSource = self
+        imagePickerController.delegate = self
         
         itemView.onSliderChanged = updateSliderValue
+        itemView.imageSelection.onAddImagesButtonPressed = addNewImages
         itemView.saveItemButton.onButtonPressed = saveItemToContext
+        itemView.deleteItemButton.onButtonPressed = deleteItemFromContext
         
         loadTotalTagsAndReloadCollection()
     }
@@ -65,6 +111,11 @@ class ItemViewController: UIViewController {
         self.item = item
         self.container = container
         self.listViewController = listViewController
+        if item != nil {
+            self.itemView = ItemView(itemViewType: .edit)
+        } else {
+            self.itemView = ItemView(itemViewType: .new)
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -94,11 +145,23 @@ class ItemViewController: UIViewController {
         itemIrritationLevel = Int(itemView.irritationSelection.inputSlider?.value ?? 1)
     }
     
+    func addNewImages() {
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
+            if status == .authorized {
+                print("Photo access authorized.")
+            }
+        }
+        
+        if PHPhotoLibrary.authorizationStatus(for: .readWrite) == .authorized {
+            present(imagePickerController, animated: true)
+        }
+    }
+    
     func saveItemToContext() {
         if let item {
-            alertController.title = "Salvar o item"
-            alertController.message = "Ao salvar o item, os conteúdos anteriores serão sobrescritos. Deseja continuar?"
-            if alertController.actions.count == 1 {
+            saveAlertController.title = "Salvar o item"
+            saveAlertController.message = "Ao salvar o item, os conteúdos anteriores serão sobrescritos. Deseja continuar?"
+            if saveAlertController.actions.count == 1 {
                 let action = UIAlertAction(title: "Salvar", style: .default) { [weak self] _ in
                     if let itemTitle = self?.itemTitle,
                        let itemIrritationLevel = self?.itemIrritationLevel,
@@ -110,29 +173,50 @@ class ItemViewController: UIViewController {
                         item.summary = itemSummary
                         item.images = itemSelectedImages
                         item.tags = itemSelectedTags
+                        
+                        self?.listViewController.loadItemsAndReloadTable()
+                        self?.listViewController.loadTagsAndReloadCollection()
+                        self?.navigationController?.popViewController(animated: true)
+                        try? self?.container?.mainContext.save()
                     }
                 }
-                alertController.addAction(action)
+                saveAlertController.addAction(action)
             }
-            present(alertController, animated: true)
+            present(saveAlertController, animated: true)
         } else {
             if !itemTitle.isEmpty && itemTitle.count <= 30 {
                 let item = Item(title: itemTitle, irritationLevel: itemIrritationLevel, summary: itemSummary, images: itemSelectedImages, tags: itemSelectedTags)
                 container?.mainContext.insert(item)
             } else {
-                alertController.title = "Título inválido"
-                alertController.message = "Não é possível salvar um item sem um título ou com um título de mais de 30 caracteres."
-                present(alertController, animated: true)
+                saveAlertController.title = "Título inválido"
+                saveAlertController.message = "Não é possível salvar um item sem um título ou com um título de mais de 30 caracteres."
+                present(saveAlertController, animated: true)
                 return
             }
+            listViewController.loadItemsAndReloadTable()
+            listViewController.loadTagsAndReloadCollection()
+            dismiss(animated: true)
+            try? container?.mainContext.save()
         }
         
-        listViewController.loadItemsAndReloadTable()
-        listViewController.loadTagsAndReloadCollection()
-        try? container?.mainContext.save()
-        dismiss(animated: true)
     }
     
+    func deleteItemFromContext() {
+        if deleteAlertController.actions.count == 1 {
+            let deleteAction = UIAlertAction(title: "Excluir", style: .destructive) {[weak self] _ in
+                if let item = self?.item {
+                    self?.container?.mainContext.delete(item)
+                }
+                self?.listViewController.loadItemsAndReloadTable()
+                self?.deleteAlertController.dismiss(animated: true)
+                self?.navigationController?.popViewController(animated: true)
+                try? self?.container?.mainContext.save()
+            }
+            
+            deleteAlertController.addAction(deleteAction)
+        }
+        present(deleteAlertController, animated: true)
+    }
 }
 
 extension ItemViewController: UITextFieldDelegate {
@@ -189,7 +273,11 @@ extension ItemViewController: UICollectionViewDataSource {
             }
                     
             let tag = totalTags[indexPath.item]
-            let button = PocasTagButton(type: .medium, tagName: tag.name, isTagSelected: false, isUserInteractionEnabled: true) { [weak self] button in
+            var isTagSelected: Bool = false
+            if itemSelectedTags.contains(tag) {
+                isTagSelected = true
+            }
+            let button = PocasTagButton(type: .medium, tagName: tag.name, isTagSelected: isTagSelected, isUserInteractionEnabled: true) { [weak self] button in
                 if self?.itemSelectedTags.contains(tag) == true {
                     self?.itemSelectedTags.removeAll { $0.name == tag.name }
                 } else {
@@ -202,7 +290,7 @@ extension ItemViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PocasImageCollectionViewCell.identifier, for: indexPath) as? PocasImageCollectionViewCell else {
                 fatalError("Unable to dequeue reusable cell for Tag.")
             }
-            let image = UIImage(resource: .flame3)
+            let image = UIImage(data: itemSelectedImages[indexPath.item])
             cell.customImageView.image = image
             return cell
         }
@@ -222,15 +310,16 @@ extension ItemViewController: UICollectionViewDelegateFlowLayout {
             let buttonSize = button.intrinsicContentSize
             return CGSize(width: buttonSize.width, height: buttonSize.height)
         } else {
-            return CGSize(width: 60, height: 60)
+            return CGSize(width: 100, height: 100)
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
         if collectionView == itemView.imageSelection.inputImages {
             let contextMenuConfiguration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
-                let deleteImageAction = UIAction(title: "Excluir imagem", image: UIImage(systemName: "trash"), attributes: [.destructive]) { action in
-                    // TODO: - Implement the deletion of the image
+                let deleteImageAction = UIAction(title: "Excluir imagem", image: UIImage(systemName: "trash"), attributes: [.destructive]) { [weak self] _ in
+                    self?.itemSelectedImages.remove(at: indexPaths[0].item)
+                    collectionView.reloadData()
                 }
                 return UIMenu(title: "", children: [deleteImageAction])
             }
@@ -238,5 +327,31 @@ extension ItemViewController: UICollectionViewDelegateFlowLayout {
         }
         
         return nil
+    }
+}
+
+
+extension ItemViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        for result in results {
+            result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (object, error) in
+                if let image = object as? UIImage {
+                    if let data = image.jpegData(compressionQuality: 0.8) {
+                        if self?.itemSelectedImages.contains(data) == false {
+                            self?.itemSelectedImages.append(data)
+                            print("Image added")
+                            DispatchQueue.main.async {
+                                self?.itemView.imageSelection.inputImages?.reloadData()
+                            }
+                        }
+                    }
+                } else if let error = error {
+                    print("Error loading image: \(error.localizedDescription)")
+                }
+            }
+        }
+        
+        
+        dismiss(animated: true)
     }
 }

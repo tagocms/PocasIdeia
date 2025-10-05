@@ -8,6 +8,9 @@
 import UIKit
 
 class ItemView: UIView {
+    // MARK: - Properties
+    let itemViewType: ItemViewType
+    
     // MARK: - UI Elements
     let largeTitleInputField = PocasTitleTextField(placeholderText: "O que te irritou...")
     let irritationSelection = PocasLabelInputView(type: .slider, labelText: "O quanto te irrita")
@@ -15,6 +18,7 @@ class ItemView: UIView {
     let imageSelection = PocasLabelInputView(type: .images, labelText: "Imagens do que te irrita")
     let tagSelection = PocasLabelInputView(type: .tags, labelText: "Etiquetas")
     let saveItemButton = PocasCustomButton(type: .primary, text: "Salvar o item", systemName: "square.and.pencil")
+    let deleteItemButton = PocasCustomButton(type: .destructive, text: "Excluir o item", systemName: "trash")
     let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -28,8 +32,10 @@ class ItemView: UIView {
     var onSliderChanged: () -> Void = { }
 
     // MARK: - Initializers
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(itemViewType: ItemViewType) {
+        self.itemViewType = itemViewType
+        super.init(frame: .zero)
+        
         backgroundColor = .pocasWhite
         
         irritationSelection.inputSlider?.addTarget(self, action: #selector(didChangeSlider), for: .valueChanged)
@@ -58,6 +64,9 @@ class ItemView: UIView {
         tagsLayout?.scrollDirection = .vertical
         
         addSubview(saveItemButton)
+        if itemViewType == .edit {
+            addSubview(deleteItemButton)
+        }
     }
     
     private func setupConstraints() {
@@ -66,17 +75,39 @@ class ItemView: UIView {
             stackView.bottomAnchor.constraint(equalTo: saveItemButton.topAnchor, constant: -12),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-            
-            saveItemButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            saveItemButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-            saveItemButton.heightAnchor.constraint(equalToConstant: 42),
-            saveItemButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            saveItemButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -12),
         ])
+        
+        if itemViewType == .new {
+            NSLayoutConstraint.activate([
+                saveItemButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+                saveItemButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+                saveItemButton.heightAnchor.constraint(equalToConstant: 42),
+                saveItemButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+                saveItemButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -12),
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                saveItemButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+                saveItemButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+                saveItemButton.heightAnchor.constraint(equalToConstant: 42),
+                saveItemButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+                saveItemButton.bottomAnchor.constraint(equalTo: deleteItemButton.topAnchor, constant: -12),
+                
+                deleteItemButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+                deleteItemButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+                deleteItemButton.heightAnchor.constraint(equalToConstant: 42),
+                deleteItemButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+                deleteItemButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -12),
+            ])
+        }
     }
     
     // MARK: - Selectors
     @objc func didChangeSlider() {
         onSliderChanged()
     }
+}
+
+enum ItemViewType {
+    case new, edit
 }

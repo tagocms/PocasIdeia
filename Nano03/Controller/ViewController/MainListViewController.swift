@@ -48,6 +48,8 @@ class MainListViewController: UIViewController {
     override func loadView() {
         super.loadView()
         view = mainListView
+        navigationController?.navigationBar.tintColor = .pocasSuperDarkCrimson
+        navigationItem.title = "Voltar"
         
         mainListView.listView.delegate = self
         mainListView.listView.dataSource = self
@@ -224,6 +226,11 @@ extension MainListViewController: UITableViewDataSource, UITableViewDelegate {
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         
         return configuration
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let itemViewController = ItemViewController(container: container, item: items[indexPath.row], listViewController: self)
+        navigationController?.pushViewController(itemViewController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {

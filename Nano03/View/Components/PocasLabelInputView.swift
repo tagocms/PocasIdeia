@@ -19,6 +19,7 @@ class PocasLabelInputView: UIView {
     
     // MARK: - Callbacks
     var onSystemImageButtonPressed: (() -> Void) = { }
+    var onAddImagesButtonPressed: (() -> Void) = { }
     
     // MARK: - UI Elements
     private let textLabel: PocasCustomTitle = PocasCustomTitle(type: .medium, title: "")
@@ -59,6 +60,7 @@ class PocasLabelInputView: UIView {
         case .images:
             inputImagesButton = PocasCustomButton(type: .secondary, text: "Adicione uma imagem", systemName: "photo")
             inputImagesButton?.contentHorizontalAlignment = .leading
+            inputImagesButton?.addTarget(self, action: #selector(didPressAddNewImagesButton), for: .touchUpInside)
             
             inputImages = PocasImageCollectionView()
         case .slider:
@@ -88,6 +90,10 @@ class PocasLabelInputView: UIView {
     // MARK: - Selector
     @objc func didPressSystemImageButton() {
         onSystemImageButtonPressed()
+    }
+    
+    @objc func didPressAddNewImagesButton() {
+        onAddImagesButtonPressed()
     }
     
     // MARK: - Setup
@@ -163,7 +169,7 @@ class PocasLabelInputView: UIView {
                 inputImages.topAnchor.constraint(equalTo: inputImagesButton.bottomAnchor, constant: Constants.verticalSpacingBetweenElements),
                 inputImages.trailingAnchor.constraint(equalTo: inputImagesButton.trailingAnchor),
                 inputImages.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.verticalPadding),
-                inputImages.heightAnchor.constraint(equalToConstant: 140),
+                inputImages.heightAnchor.constraint(equalToConstant: 100),
                 ])
         }
         

@@ -42,6 +42,7 @@ class PocasTableViewCell: UITableViewCell {
         tagsCollection.dataSource = self
         
         backgroundColor = .pocasWhite
+        accessoryType = .disclosureIndicator
     }
     
     required init?(coder: NSCoder) {
