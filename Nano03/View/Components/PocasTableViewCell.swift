@@ -70,14 +70,13 @@ class PocasTableViewCell: UITableViewCell {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             stackView.heightAnchor.constraint(equalTo: customImageView.heightAnchor),
             
-//            customLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-//            customLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-//            customLabel.bottomAnchor.constraint(equalTo: stackView.centerYAnchor, constant: -2),
-//            
-//            tagsCollection.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-//            tagsCollection.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-//            tagsCollection.topAnchor.constraint(equalTo: stackView.centerYAnchor, constant: 2),
-            tagsCollection.heightAnchor.constraint(equalToConstant: 21),
+            customLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            customLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            customLabel.bottomAnchor.constraint(equalTo: stackView.centerYAnchor, constant: -2),
+            
+            tagsCollection.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            tagsCollection.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            tagsCollection.topAnchor.constraint(equalTo: stackView.centerYAnchor, constant: 2),
         ])
         
         // Constraints that can be broken on deletion animation
@@ -124,7 +123,6 @@ extension PocasTableViewCell: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let buttonName = tags.count > 4 && indexPath.item == 3 ? "+ \(tags.count - indexPath.item)" : tags[indexPath.item]
         let button = PocasTagButton(type: .small, tagName: buttonName, isTagSelected: false, isUserInteractionEnabled: true, onButtonPressed: {_ in })
-        print(buttonName, button.intrinsicContentSize)
         return button.intrinsicContentSize
     }
 }
