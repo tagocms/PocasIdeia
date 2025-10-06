@@ -19,6 +19,7 @@ class MainListViewController: UIViewController {
         }
     }
     var tags: [Tag] = []
+    var tagButtons: [PocasTagButton] = []
     var predicate: Predicate<Item>? = nil
     var predicateTagList: [Tag] = [] {
         didSet {
@@ -37,7 +38,11 @@ class MainListViewController: UIViewController {
         SortDescriptor(\Item.title, order: .forward),
         SortDescriptor(\Item.irritationLevel, order: .forward),
         SortDescriptor(\Item.createdDate, order: .forward)
-    ]
+    ] {
+        didSet {
+            animateSortChanges()
+        }
+    }
     
     var indexPathToDelete: IndexPath? = nil
     
@@ -74,6 +79,8 @@ class MainListViewController: UIViewController {
         
         loadItemsAndReloadTable()
         loadTagsAndReloadCollection()
+        setupOrderByButton()
+        setupFilterButton()
         setupUIElements()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -148,6 +155,16 @@ class MainListViewController: UIViewController {
         predicate = tempPredicate
     }
     
+    private func animateSortChanges() {
+        var indexPathsToUpdate: [IndexPath] = []
+        for index in items.indices {
+            indexPathsToUpdate.append(IndexPath(row: index, section: 0))
+        }
+        
+        loadItemsFromContext()
+        mainListView.listView.reloadRows(at: indexPathsToUpdate, with: .automatic)
+    }
+    
     private func animateFilterChanges() {
         let oldItems = items
         loadItemsFromContext()
@@ -192,6 +209,46 @@ class MainListViewController: UIViewController {
     }
     
     // MARK: - Setup Functions
+    func setupOrderByButton() {
+        let byTitle = UIAction(title: "Título", selectedImage: UIImage(systemName: "arrow.down")) { [weak self] action in
+            self?.sortOrder = [
+                SortDescriptor(\Item.title, order: .forward),
+                SortDescriptor(\Item.irritationLevel, order: .forward),
+                SortDescriptor(\Item.createdDate, order: .forward),
+            ]
+        }
+        let byIrritation = UIAction(title: "Irritação", selectedImage: UIImage(systemName: "arrow.down")) { [weak self] action in
+            self?.sortOrder = [
+                SortDescriptor(\Item.irritationLevel, order: .forward),
+                SortDescriptor(\Item.title, order: .forward),
+                SortDescriptor(\Item.createdDate, order: .forward),
+            ]
+        }
+        let byCreationDate = UIAction(title: "Date", selectedImage: UIImage(systemName: "arrow.down")) { [weak self] action in
+            self?.sortOrder = [
+                SortDescriptor(\Item.createdDate, order: .forward),
+                SortDescriptor(\Item.title, order: .forward),
+                SortDescriptor(\Item.irritationLevel, order: .forward),
+            ]
+        }
+        let menu = UIMenu(title: "Ordenamento", options: .singleSelection, children: [byTitle, byIrritation, byCreationDate])
+        mainListView.orderByButton.menu = menu
+        mainListView.orderByButton.showsMenuAsPrimaryAction = true
+    }
+    
+    func setupFilterButton() {
+        let clearFilter = UIAction(title: "Limpar filtro", image: UIImage(systemName: "line.3.horizontal")) { [weak self] _ in
+            self?.searchText = ""
+            self?.predicateTagList.removeAll()
+            for button in self?.tagButtons ?? [] {
+                button.isTagSelected = false
+            }
+        }
+        let menu = UIMenu(title: "Filtros", children: [clearFilter])
+        mainListView.filterButton.menu = menu
+        mainListView.filterButton.showsMenuAsPrimaryAction = true
+    }
+    
     func setupUIElements() {
         mainListView.stackView.isHidden = true
         mainListView.contentUnavailableView.isHidden = true
@@ -300,6 +357,7 @@ extension MainListViewController: UICollectionViewDataSource, UICollectionViewDe
                 }
             }
         }
+        tagButtons.append(button)
         cell.tagButton = button
         return cell
     }
