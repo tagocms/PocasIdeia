@@ -14,6 +14,7 @@ class PocasTagCollectionView: UICollectionView {
         layout.scrollDirection = .horizontal
         layout.minimumInteritemSpacing = 8
         layout.sectionInset = edgeInsets
+        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
         super.init(frame: .zero, collectionViewLayout: layout)
         translatesAutoresizingMaskIntoConstraints = false

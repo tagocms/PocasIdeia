@@ -60,7 +60,7 @@ class MainListViewController: UIViewController {
         super.loadView()
         view = mainListView
         navigationController?.navigationBar.tintColor = .pocasSuperDarkCrimson
-        navigationItem.title = "Voltar"
+        navigationItem.backButtonTitle = "Voltar"
         
         mainListView.listView.delegate = self
         mainListView.listView.dataSource = self

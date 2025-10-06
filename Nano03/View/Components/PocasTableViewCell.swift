@@ -28,6 +28,7 @@ class PocasTableViewCell: UITableViewCell {
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.spacing = 4
+        stackView.alignment = .leading
         
         return stackView
     }()
@@ -52,8 +53,8 @@ class PocasTableViewCell: UITableViewCell {
     // MARK: - Setup UI
     func setupUI() {
         addSubview(customImageView)
-        stackView.addSubview(customLabel)
-        stackView.addSubview(tagsCollection)
+        stackView.addArrangedSubview(customLabel)
+        stackView.addArrangedSubview(tagsCollection)
         addSubview(stackView)
     }
     
@@ -61,19 +62,21 @@ class PocasTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             customImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             customImageView.widthAnchor.constraint(equalTo: customImageView.heightAnchor),
+            customImageView.heightAnchor.constraint(equalToConstant: 60),
+            customImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             
             stackView.centerYAnchor.constraint(equalTo: customImageView.centerYAnchor),
             stackView.leadingAnchor.constraint(equalTo: customImageView.trailingAnchor, constant: 10),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             stackView.heightAnchor.constraint(equalTo: customImageView.heightAnchor),
             
-            customLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            customLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            customLabel.bottomAnchor.constraint(equalTo: stackView.centerYAnchor, constant: -2),
-            
-            tagsCollection.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            tagsCollection.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            tagsCollection.topAnchor.constraint(equalTo: stackView.centerYAnchor, constant: 2),
+//            customLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+//            customLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+//            customLabel.bottomAnchor.constraint(equalTo: stackView.centerYAnchor, constant: -2),
+//            
+//            tagsCollection.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+//            tagsCollection.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+//            tagsCollection.topAnchor.constraint(equalTo: stackView.centerYAnchor, constant: 2),
             tagsCollection.heightAnchor.constraint(equalToConstant: 21),
         ])
         
@@ -121,7 +124,7 @@ extension PocasTableViewCell: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let buttonName = tags.count > 4 && indexPath.item == 3 ? "+ \(tags.count - indexPath.item)" : tags[indexPath.item]
         let button = PocasTagButton(type: .small, tagName: buttonName, isTagSelected: false, isUserInteractionEnabled: true, onButtonPressed: {_ in })
-        
+        print(buttonName, button.intrinsicContentSize)
         return button.intrinsicContentSize
     }
 }
