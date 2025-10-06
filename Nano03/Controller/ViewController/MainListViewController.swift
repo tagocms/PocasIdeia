@@ -26,7 +26,13 @@ class MainListViewController: UIViewController {
             animateFilterChanges()
         }
     }
-    
+    var searchText: String = "" {
+        didSet {
+            mainListView.searchBar.text = searchText
+            updatePredicate()
+            animateFilterChanges()
+        }
+    }
     var sortOrder = [
         SortDescriptor(\Item.title, order: .forward),
         SortDescriptor(\Item.irritationLevel, order: .forward),
@@ -55,6 +61,7 @@ class MainListViewController: UIViewController {
         mainListView.listView.dataSource = self
         mainListView.tagsCollectionView.delegate = self
         mainListView.tagsCollectionView.dataSource = self
+        mainListView.searchBar.delegate = self
         
         mainListView.newItemButton.onButtonPressed = createNewItem
     }
@@ -68,6 +75,9 @@ class MainListViewController: UIViewController {
         loadItemsAndReloadTable()
         loadTagsAndReloadCollection()
         setupUIElements()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
     }
     
     // MARK: - Data functions
@@ -109,16 +119,33 @@ class MainListViewController: UIViewController {
     }
     
     private func updatePredicate() {
-        if predicateTagList.isEmpty {
-            predicate = nil
-        } else {
+        let trimmedSearchText = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        var tempPredicate: Predicate<Item>?
+        if predicateTagList.isEmpty && trimmedSearchText.isEmpty {
+            tempPredicate = nil
+        } else if predicateTagList.isEmpty {
+            tempPredicate = #Predicate<Item> { item in
+                item.title.localizedStandardContains(trimmedSearchText)
+            }
+        } else if searchText.isEmpty {
             let selectedTagNames = predicateTagList.map { $0.name }
-            predicate = #Predicate<Item> { item in
+            tempPredicate = #Predicate<Item> { item in
                 item.tags?.contains { tag in
                     selectedTagNames.contains(tag.name)
                 } == true
             }
+        } else {
+            let selectedTagNames = predicateTagList.map { $0.name }
+            tempPredicate = #Predicate<Item> { item in
+                item.tags?.contains { tag in
+                    selectedTagNames.contains(tag.name)
+                } == true
+                && item.title.localizedStandardContains(trimmedSearchText)
+            }
         }
+        
+        predicate = tempPredicate
     }
     
     private func animateFilterChanges() {
@@ -195,6 +222,11 @@ class MainListViewController: UIViewController {
             self.dismiss(animated: true)
         }
         alertController.addAction(cancelAction)
+    }
+    
+    // MARK: - Auxiliary functions
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 
 }
@@ -277,5 +309,20 @@ extension MainListViewController: UICollectionViewDataSource, UICollectionViewDe
         let button = PocasTagButton(type: .medium, tagName: buttonName, isTagSelected: false, isUserInteractionEnabled: true, onButtonPressed: {_ in })
         
         return button.intrinsicContentSize
+    }
+}
+
+extension MainListViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.searchText = searchBar.text ?? ""
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchText = ""
+        searchBar.resignFirstResponder()
     }
 }
