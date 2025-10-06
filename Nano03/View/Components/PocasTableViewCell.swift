@@ -117,4 +117,11 @@ extension PocasTableViewCell: UICollectionViewDataSource, UICollectionViewDelega
         cell.tagButton = button
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let buttonName = tags.count > 4 && indexPath.item == 3 ? "+ \(tags.count - indexPath.item)" : tags[indexPath.item]
+        let button = PocasTagButton(type: .small, tagName: buttonName, isTagSelected: false, isUserInteractionEnabled: true, onButtonPressed: {_ in })
+        
+        return button.intrinsicContentSize
+    }
 }

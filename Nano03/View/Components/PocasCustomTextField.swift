@@ -21,7 +21,7 @@ class PocasCustomTextField: UITextField {
         textColor = .pocasSuperDarkCrimson
         attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: [.foregroundColor: UIColor.pocasSuperLightCrimson])
         
-        backgroundColor = .white
+        backgroundColor = .systemBackground
         layer.cornerRadius = 12
         layer.borderWidth = 0.5
         layer.borderColor = UIColor.pocasSuperDarkCrimson.cgColor

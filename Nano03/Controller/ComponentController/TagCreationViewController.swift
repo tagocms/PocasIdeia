@@ -108,7 +108,7 @@ class TagCreationViewController: UIViewController {
         }
         
         createTagFeedbackLabel.text = "Etiqueta \"\(newTag.name)\" criada com sucesso!"
-        
+        itemViewController?.listViewController.loadTagsAndReloadCollection()
         try? container?.mainContext.save()
     }
     

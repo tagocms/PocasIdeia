@@ -19,6 +19,8 @@ class PocasTagCollectionView: UICollectionView {
         translatesAutoresizingMaskIntoConstraints = false
         
         self.backgroundColor = .clear
+        self.showsHorizontalScrollIndicator = false
+        self.showsVerticalScrollIndicator = false
         
         register(PocasTagCollectionViewCell.self, forCellWithReuseIdentifier: PocasTagCollectionViewCell.identifier)
     }

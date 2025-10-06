@@ -9,10 +9,15 @@ import UIKit
 
 class PocasTagCollectionViewCell: UICollectionViewCell {
     static let identifier = "TagCell"
+    private var hasSetupConstraints = false
+    
     var tagButton = PocasTagButton(type: .medium, tagName: "", onButtonPressed: { _ in }) {
         didSet {
-            setupUI()
-            setupConstraints()
+            oldValue.removeFromSuperview()
+            if !hasSetupConstraints {
+                setupUI()
+                setupConstraints()
+            }
         }
     }
     
@@ -36,7 +41,8 @@ class PocasTagCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             tagButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             tagButton.trailingAnchor.constraint(equalTo: trailingAnchor),
-            tagButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            tagButton.topAnchor.constraint(equalTo: topAnchor),
+            tagButton.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 }

@@ -84,6 +84,7 @@ class MainListViewController: UIViewController {
         setupUIElements()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.numberOfTapsRequired = 2
         view.addGestureRecognizer(tapGesture)
     }
     
