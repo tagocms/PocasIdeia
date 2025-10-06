@@ -81,6 +81,7 @@ class PocasTagButton: UIButton {
     // MARK: - Action function
     @objc func didPressButton() {
         onButtonPressed(self)
+        HapticsManager.shared.play(.success)
         isTagSelected.toggle()
     }
     

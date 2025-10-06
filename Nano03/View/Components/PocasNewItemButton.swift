@@ -40,5 +40,6 @@ class PocasNewItemButton: UIButton {
     // MARK: - Intent function
     @objc private func didPressButton() {
         onButtonPressed()
+        HapticsManager.shared.play(.success)
     }
 }

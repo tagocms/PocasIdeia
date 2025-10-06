@@ -11,9 +11,11 @@ class PocasCustomButton: UIButton {
     
     // MARK: - Callback
     var onButtonPressed: () -> Void = { }
+    let type: CustomButtonType
 
     // MARK: - Initializers
     init(type: CustomButtonType, text: String, systemName: String) {
+        self.type = type
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
@@ -55,6 +57,11 @@ class PocasCustomButton: UIButton {
     // MARK: - Selector
     @objc func didPressButton() {
         onButtonPressed()
+        if type == .destructive {
+            HapticsManager.shared.play(.warning)
+        } else {
+            HapticsManager.shared.play(.success)
+        }
     }
 }
 

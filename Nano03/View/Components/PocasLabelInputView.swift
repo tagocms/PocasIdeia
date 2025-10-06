@@ -90,6 +90,7 @@ class PocasLabelInputView: UIView {
     // MARK: - Selector
     @objc func didPressSystemImageButton() {
         onSystemImageButtonPressed()
+        HapticsManager.shared.play(.success)
     }
     
     @objc func didPressAddNewImagesButton() {
