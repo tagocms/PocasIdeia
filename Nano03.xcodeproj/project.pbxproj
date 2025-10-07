@@ -151,7 +151,7 @@
 				INFOPLIST_FILE = Nano03/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PocasIdeia;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Precisamos de acesso às suas fotos para salvar fotos de cada item.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Precisamos de acesso à sua galeria de fotos para que você possa salvar fotos relacionadas a cada item da lista. Suas fotos serão armazenadas somente localmente e no seu iCloud.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
@@ -188,7 +188,7 @@
 				INFOPLIST_FILE = Nano03/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PocasIdeia;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Precisamos de acesso às suas fotos para salvar fotos de cada item.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Precisamos de acesso à sua galeria de fotos para que você possa salvar fotos relacionadas a cada item da lista. Suas fotos serão armazenadas somente localmente e no seu iCloud.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
