@@ -8,17 +8,17 @@
 
 <p align="center">
   <a href="https://apps.apple.com/us/app/pocasideia/id6753698657">
-    <img src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg" alt="Download on the App Store" height="50">
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://apps.apple.com/us/app/pocasideia/id6753698657">
     <img src="https://img.shields.io/itunes/v/6753698657?label=App%20Store&logo=apple" alt="App Store Version">
   </a>
   <img src="https://img.shields.io/badge/Language-Swift-orange" alt="Swift">
   <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
   <img src="https://img.shields.io/github/stars/tagocms/PocasIdeia" alt="GitHub Stars">
+</p>
+
+<p align="center">
+  <a href="https://apps.apple.com/us/app/pocasideia/id6753698657">
+    <img src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg" alt="Download on the App Store" height="50">
+  </a>
 </p>
 
 ## Introduction
